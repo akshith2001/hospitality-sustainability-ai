@@ -109,6 +109,20 @@ emissions, cost and payback effects. Current prices, reduction percentages, emis
 factors and practicality ratings are illustrative; they must be replaced and validated
 before real decisions are made.
 
+## Test recommendation robustness
+
+The default 40/35/25 weights are a judgement, not an objective truth. Weight
+sensitivity enumerates alternative emissions, financial and practicality weights that
+sum to one and reports how often each intervention wins:
+
+```bash
+python -m hospitality_ai.decision_sensitivity --step 0.05
+```
+
+A recommendation that wins under many plausible combinations is more robust. A low
+winner share means the decision is strongly dependent on stakeholder priorities and
+should be presented with alternatives.
+
 ## Planned stages
 
 1. Transparent non-AI baseline

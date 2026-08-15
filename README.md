@@ -64,6 +64,23 @@ also receives squared distance from 18 C so that both unusually cold and unusual
 hot weather can increase predicted consumption. The injected anomaly label is never
 used as a prediction feature.
 
+## Detect unexpected excess consumption
+
+The anomaly stage calculates a residual for each day:
+
+`residual = actual electricity - predicted electricity`
+
+A robust threshold is learned from the median and median absolute deviation (MAD) of
+training residuals. A large positive residual creates an investigation alert:
+
+```bash
+python -m hospitality_ai.anomaly --rows 1000 --seed 2026
+```
+
+An alert is not proof of waste. It may reflect a special event, missing feature,
+sensor problem or genuine operational change. The synthetic anomaly label is used
+only after prediction to calculate precision and recall.
+
 ## Planned stages
 
 1. Transparent non-AI baseline

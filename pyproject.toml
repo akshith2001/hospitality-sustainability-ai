@@ -13,6 +13,7 @@ requires-python = ">=3.10"
 generate-hospitality-data = "hospitality_ai.synthetic_data:main"
 evaluate-baseline = "hospitality_ai.baseline:main"
 train-electricity-model = "hospitality_ai.linear_model:main"
+detect-electricity-anomalies = "hospitality_ai.anomaly:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

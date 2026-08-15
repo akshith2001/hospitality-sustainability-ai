@@ -1,0 +1,4 @@
+venue_id,utc_date,customers,customers_quality,opening_hours,outside_temperature_c,weather_station_id,special_event_category,equipment_change
+VENUE-0001,2026-01-01,180,verified,12.0,8.5,WX-LONDON-01,wedding,false
+VENUE-0001,2026-01-02,95,estimated,10.0,7.9,WX-LONDON-01,none,false
+VENUE-0001,2026-01-03,230,verified,14.0,9.2,WX-LONDON-01,private_event,true

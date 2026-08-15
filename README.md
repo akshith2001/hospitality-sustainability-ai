@@ -155,6 +155,12 @@ verified daily meter total. The illustrative default tolerance is 1% to allow do
 rounding differences. A larger mismatch is flagged for investigation rather than silently
 corrected. Incomplete days are explicitly marked not comparable.
 
+The example [daily operational-context CSV](data/templates/daily_operational_context.csv)
+records customers and their quality status, opening hours, temperature, a
+non-identifying weather-station ID, a controlled special-event category and whether
+equipment changed. It contains no customer or employee identities and rejects impossible
+hours, implausible temperatures, unknown categories and duplicate venue/date records.
+
 ## Train the first regression model
 
 The first learning model is multivariable linear regression implemented with the

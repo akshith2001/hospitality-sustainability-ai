@@ -59,6 +59,26 @@ def validate_dataset(readings: list[MeterReading]) -> tuple[str, ...]:
     return tuple(errors)
 
 
+def primary_evaluation_readings(readings: list[MeterReading]) -> list[MeterReading]:
+    """Return only directly measured readings suitable for primary evaluation."""
+    errors = validate_dataset(readings)
+    if errors:
+        raise ValueError("Invalid meter data: " + "; ".join(errors))
+    return [reading for reading in readings if reading.quality_flag == "verified"]
+
+
+def sensitivity_evaluation_readings(readings: list[MeterReading]) -> list[MeterReading]:
+    """Return measured and estimated values for a separately labelled analysis."""
+    errors = validate_dataset(readings)
+    if errors:
+        raise ValueError("Invalid meter data: " + "; ".join(errors))
+    return [
+        reading
+        for reading in readings
+        if reading.quality_flag in {"verified", "estimated"}
+    ]
+
+
 def write_meter_csv(readings: list[MeterReading], output_path: Path) -> None:
     errors = validate_dataset(readings)
     if errors:

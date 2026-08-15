@@ -4,6 +4,8 @@ from pathlib import Path
 
 from hospitality_ai.meter_data import (
     MeterReading,
+    primary_evaluation_readings,
+    sensitivity_evaluation_readings,
     validate_dataset,
     validate_reading,
     write_meter_csv,
@@ -35,6 +37,14 @@ class MeterDataTests(unittest.TestCase):
             path = Path(directory) / "meter.csv"
             write_meter_csv([valid_reading()], path)
             self.assertIn("interval_start_utc", path.read_text(encoding="utf-8"))
+
+    def test_primary_evaluation_uses_only_verified_values(self) -> None:
+        estimated = MeterReading(
+            "VENUE-0001", "2026-01-01T00:30:00Z", 30, 12.8, "estimated"
+        )
+        readings = [valid_reading(), estimated]
+        self.assertEqual(primary_evaluation_readings(readings), [valid_reading()])
+        self.assertEqual(len(sensitivity_evaluation_readings(readings)), 2)
 
 
 if __name__ == "__main__":

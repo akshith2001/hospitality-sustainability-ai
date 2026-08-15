@@ -139,6 +139,11 @@ UTC timestamps prevent daylight-saving clock changes from creating duplicated or
 local times. The validator rejects malformed identifiers, misaligned timestamps, negative
 consumption, contradictory missing values and duplicate venue/timestamp pairs.
 
+Primary model evaluation uses only `verified` readings. A separately labelled sensitivity
+analysis may include both `verified` and `estimated` values; missing and faulty records are
+excluded from both. This prevents calculated replacements from being presented as trusted
+ground truth.
+
 ## Train the first regression model
 
 The first learning model is multivariable linear regression implemented with the

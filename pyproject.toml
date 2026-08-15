@@ -15,6 +15,7 @@ evaluate-baseline = "hospitality_ai.baseline:main"
 train-electricity-model = "hospitality_ai.linear_model:main"
 detect-electricity-anomalies = "hospitality_ai.anomaly:main"
 explain-electricity-alert = "hospitality_ai.explain:main"
+recommend-electricity-action = "hospitality_ai.recommend:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

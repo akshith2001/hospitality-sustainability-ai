@@ -94,6 +94,21 @@ For linear regression, each contribution is exactly `input value x learned
 coefficient`, and the contributions sum to the prediction. The explanation describes
 association within this model, not causation in a real venue.
 
+## Recommend a feasible intervention
+
+The decision-support stage ranks interventions that fit a selected budget using fixed
+weights for emissions benefit (40%), financial benefit (35%) and operational
+practicality (25%):
+
+```bash
+python -m hospitality_ai.recommend --predicted-daily-kwh 416.05 --budget-gbp 1500
+```
+
+The highest-scoring feasible option is recommended, with its estimated electricity,
+emissions, cost and payback effects. Current prices, reduction percentages, emission
+factors and practicality ratings are illustrative; they must be replaced and validated
+before real decisions are made.
+
 ## Planned stages
 
 1. Transparent non-AI baseline

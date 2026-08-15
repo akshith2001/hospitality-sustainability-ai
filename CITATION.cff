@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use this educational research prototype, please cite it as below."
+title: "Hospitality Sustainability AI"
+type: software
+authors:
+  - family-names: "Moharampudi"
+    given-names: "Akshith"
+version: 0.1.0
+date-released: 2026-08-15
+license: MIT
+abstract: >-
+  An explainable educational AI prototype for hospitality electricity prediction,
+  anomaly investigation and sustainability intervention ranking.

@@ -35,6 +35,20 @@ python -m hospitality_ai.synthetic_data --rows 1000 --seed 2026
 
 The fixed seed ensures that another researcher can reproduce the same dataset.
 
+## Establish the non-AI baseline
+
+The dataset is shuffled reproducibly and divided into 80% training data and 20%
+unseen test data. The baseline learns only the mean electricity consumption in the
+training set and predicts that value for every test row:
+
+```bash
+python -m hospitality_ai.baseline --rows 1000 --seed 2026
+```
+
+Performance is measured using mean absolute error (MAE). A later machine-learning
+model must beat this baseline on the same unseen test set to demonstrate useful
+predictive information.
+
 ## Planned stages
 
 1. Transparent non-AI baseline
@@ -43,4 +57,3 @@ The fixed seed ensures that another researcher can reproduce the same dataset.
 4. Explainable feature contributions
 5. Intervention ranking across emissions, cost and practicality
 6. Uncertainty analysis and dashboard
-

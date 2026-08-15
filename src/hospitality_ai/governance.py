@@ -6,6 +6,8 @@ from dataclasses import dataclass, replace
 
 
 APPROVER_ROLES = frozenset({"research", "sustainability", "model_governance"})
+METER_STATUSES = frozenset({"verified", "unverified", "fault"})
+AI_STATUSES = frozenset({"active", "paused"})
 
 
 @dataclass(frozen=True)
@@ -30,6 +32,15 @@ class MonitoringDecision:
     degradation_limit_pct: float
     recommendations_paused: bool
     action: str
+
+
+@dataclass(frozen=True)
+class OperationalView:
+    meter_status: str
+    ai_status: str
+    show_raw_readings: bool
+    show_ai_recommendations: bool
+    message: str
 
 
 def evaluate_candidate(
@@ -98,4 +109,27 @@ def monitor_deployed_model(
         degradation_limit_pct=degradation_limit_pct,
         recommendations_paused=paused,
         action=action,
+    )
+
+
+def build_operational_view(meter_status: str, ai_status: str) -> OperationalView:
+    """Keep measurement visibility separate from AI recommendation availability."""
+    if meter_status not in METER_STATUSES:
+        raise ValueError("Unknown meter status")
+    if ai_status not in AI_STATUSES:
+        raise ValueError("Unknown AI status")
+    show_readings = meter_status == "verified"
+    show_recommendations = show_readings and ai_status == "active"
+    if not show_readings:
+        message = "Meter data unavailable pending verification."
+    elif not show_recommendations:
+        message = "Verified meter data available; AI recommendations paused for review."
+    else:
+        message = "Verified meter data and approved AI recommendations available."
+    return OperationalView(
+        meter_status=meter_status,
+        ai_status=ai_status,
+        show_raw_readings=show_readings,
+        show_ai_recommendations=show_recommendations,
+        message=message,
     )

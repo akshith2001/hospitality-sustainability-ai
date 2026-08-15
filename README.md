@@ -108,6 +108,11 @@ recommendations and requests human review while data collection continues. The s
 does not automatically deploy a replacement or perform a rollback; reviewers decide
 the next action using versioned model and evaluation records.
 
+Meter status and AI status are displayed separately. Verified raw meter readings may
+remain available while AI recommendations are paused. Unverified or faulty meter data
+hide both operational readings and model recommendations from normal decision-making
+views, while authorised technical reviewers retain diagnostic access.
+
 ## Proposed real-world data collection
 
 A real study should collect automatic 30-minute smart-meter readings plus verified

@@ -94,6 +94,14 @@ features. Real research should repeat this process across multiple venues rather
 relying on one favourable result. The all-venues command reports every held-out result,
 the mean result and the best and worst venues to prevent cherry-picking.
 
+## Model promotion governance
+
+New data do not automatically replace the deployed model. A candidate must improve
+overall MAE without worsening the worst held-out venue result. Passing these checks
+only makes the candidate eligible for human review; an authorised research,
+sustainability or model-governance reviewer must then approve it. Failed or unapproved
+candidates cannot be marked eligible for deployment.
+
 ## Proposed real-world data collection
 
 A real study should collect automatic 30-minute smart-meter readings plus verified

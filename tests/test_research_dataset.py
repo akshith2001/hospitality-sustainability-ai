@@ -3,7 +3,11 @@ from dataclasses import replace
 
 from hospitality_ai.meter_data import DailyMeterSummary
 from hospitality_ai.operational_context import DailyOperationalContext
-from hospitality_ai.research_dataset import join_daily_data, primary_evaluation_records
+from hospitality_ai.research_dataset import (
+    build_data_quality_report,
+    join_daily_data,
+    primary_evaluation_records,
+)
 
 
 def meter_summary(date: str = "2026-01-01") -> DailyMeterSummary:
@@ -57,6 +61,17 @@ class ResearchDatasetTests(unittest.TestCase):
     def test_duplicate_meter_summary_is_rejected(self) -> None:
         with self.assertRaises(ValueError):
             join_daily_data([meter_summary(), meter_summary()], [context()])
+
+    def test_quality_report_counts_exclusions_and_missing_context(self) -> None:
+        summaries = [meter_summary(), meter_summary("2026-01-02")]
+        estimated = replace(context(), customers_quality="estimated")
+        result = join_daily_data(summaries, [estimated])
+        report = build_data_quality_report(result, len(summaries), 1)
+        reasons = dict(report.exclusion_reasons)
+        self.assertEqual(report.primary_evaluation_count, 0)
+        self.assertEqual(report.unmatched_meter_count, 1)
+        self.assertEqual(reasons["customers_not_verified"], 1)
+        self.assertEqual(reasons["operational_context_missing"], 1)
 
 
 if __name__ == "__main__":

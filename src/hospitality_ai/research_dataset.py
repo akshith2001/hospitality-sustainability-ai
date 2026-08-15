@@ -41,6 +41,17 @@ class DatasetJoinResult:
     unmatched_context_keys: tuple[tuple[str, str], ...]
 
 
+@dataclass(frozen=True)
+class DataQualityReport:
+    meter_summary_count: int
+    context_count: int
+    joined_count: int
+    primary_evaluation_count: int
+    unmatched_meter_count: int
+    unmatched_context_count: int
+    exclusion_reasons: tuple[tuple[str, int], ...]
+
+
 def join_daily_data(
     meter_summaries: list[DailyMeterSummary],
     contexts: list[DailyOperationalContext],
@@ -90,3 +101,34 @@ def primary_evaluation_records(
     result: DatasetJoinResult,
 ) -> tuple[JoinedDailyRecord, ...]:
     return tuple(record for record in result.records if record.eligible_for_primary_evaluation)
+
+
+def build_data_quality_report(
+    result: DatasetJoinResult,
+    meter_summary_count: int,
+    context_count: int,
+) -> DataQualityReport:
+    """Count every primary-evaluation exclusion without hiding overlapping reasons."""
+    reasons = {
+        "meter_not_complete_verified": 0,
+        "customers_not_verified": 0,
+        "event_guest_count_not_verified": 0,
+        "operational_context_missing": len(result.unmatched_meter_keys),
+        "meter_summary_missing": len(result.unmatched_context_keys),
+    }
+    for record in result.records:
+        if record.meter_quality_status != "complete_verified":
+            reasons["meter_not_complete_verified"] += 1
+        if record.customers_quality != "verified":
+            reasons["customers_not_verified"] += 1
+        if record.event_guest_count_quality not in {"verified", "not_applicable"}:
+            reasons["event_guest_count_not_verified"] += 1
+    return DataQualityReport(
+        meter_summary_count=meter_summary_count,
+        context_count=context_count,
+        joined_count=len(result.records),
+        primary_evaluation_count=len(primary_evaluation_records(result)),
+        unmatched_meter_count=len(result.unmatched_meter_keys),
+        unmatched_context_count=len(result.unmatched_context_keys),
+        exclusion_reasons=tuple(sorted(reasons.items())),
+    )

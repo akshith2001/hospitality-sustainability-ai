@@ -172,6 +172,11 @@ silently discarded. Duplicate daily meter summaries are rejected. Primary evalua
 records require complete verified meter intervals, verified customer counts and either a
 verified event count or a confirmed no-event status.
 
+A data-quality report publishes meter-summary and context totals, successful joins,
+primary-evaluation records, unmatched rows and counts for every exclusion reason. Reasons
+may overlap—for example, one day can have both estimated customers and an unverified event
+count—so the report does not misleadingly force each excluded row into only one category.
+
 ## Train the first regression model
 
 The first learning model is multivariable linear regression implemented with the

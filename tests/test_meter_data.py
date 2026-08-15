@@ -6,6 +6,7 @@ from hospitality_ai.meter_data import (
     MeterReading,
     primary_evaluation_readings,
     sensitivity_evaluation_readings,
+    summarise_utc_day,
     validate_dataset,
     validate_reading,
     write_meter_csv,
@@ -45,6 +46,29 @@ class MeterDataTests(unittest.TestCase):
         readings = [valid_reading(), estimated]
         self.assertEqual(primary_evaluation_readings(readings), [valid_reading()])
         self.assertEqual(len(sensitivity_evaluation_readings(readings)), 2)
+
+    def test_forty_seven_readings_are_kept_as_incomplete(self) -> None:
+        readings = []
+        for interval in range(47):
+            hour, minute_index = divmod(interval, 2)
+            readings.append(
+                valid_reading(f"2026-01-01T{hour:02d}:{minute_index * 30:02d}:00Z")
+            )
+        summary = summarise_utc_day(readings)
+        self.assertEqual(summary.quality_status, "incomplete")
+        self.assertEqual(summary.unavailable_intervals, 1)
+        self.assertAlmostEqual(summary.coverage_pct, 47 / 48 * 100)
+
+    def test_forty_eight_verified_readings_are_complete(self) -> None:
+        readings = []
+        for interval in range(48):
+            hour, minute_index = divmod(interval, 2)
+            readings.append(
+                valid_reading(f"2026-01-01T{hour:02d}:{minute_index * 30:02d}:00Z")
+            )
+        summary = summarise_utc_day(readings)
+        self.assertEqual(summary.quality_status, "complete_verified")
+        self.assertEqual(summary.coverage_pct, 100.0)
 
 
 if __name__ == "__main__":

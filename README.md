@@ -144,6 +144,12 @@ analysis may include both `verified` and `estimated` values; missing and faulty 
 excluded from both. This prevents calculated replacements from being presented as trusted
 ground truth.
 
+Daily reconciliation expects 48 UTC half-hour intervals. A day with fewer intervals is
+retained as `incomplete` with its available kWh sum, verified and estimated counts,
+unavailable count and coverage percentage. It is not silently discarded and its partial
+sum is never described as a complete daily total. A day containing all 48 intervals but
+one or more estimates is labelled `complete_with_estimates`, not `complete_verified`.
+
 ## Train the first regression model
 
 The first learning model is multivariable linear regression implemented with the

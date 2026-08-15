@@ -22,6 +22,18 @@ class MeterReading:
     quality_flag: str
 
 
+@dataclass(frozen=True)
+class DailyMeterSummary:
+    venue_id: str
+    utc_date: str
+    available_kwh: float
+    verified_intervals: int
+    estimated_intervals: int
+    unavailable_intervals: int
+    coverage_pct: float
+    quality_status: str
+
+
 def validate_reading(reading: MeterReading) -> tuple[str, ...]:
     """Return every validation problem rather than failing at the first one."""
     errors = []
@@ -77,6 +89,54 @@ def sensitivity_evaluation_readings(readings: list[MeterReading]) -> list[MeterR
         for reading in readings
         if reading.quality_flag in {"verified", "estimated"}
     ]
+
+
+def summarise_utc_day(readings: list[MeterReading]) -> DailyMeterSummary:
+    """Reconcile one venue's UTC day without inventing missing consumption."""
+    if not readings:
+        raise ValueError("At least one reading is required")
+    errors = validate_dataset(readings)
+    if errors:
+        raise ValueError("Invalid meter data: " + "; ".join(errors))
+    venue_ids = {reading.venue_id for reading in readings}
+    dates = {
+        datetime.fromisoformat(reading.interval_start_utc.replace("Z", "+00:00"))
+        .date()
+        .isoformat()
+        for reading in readings
+    }
+    if len(venue_ids) != 1 or len(dates) != 1:
+        raise ValueError("All readings must belong to one venue and one UTC date")
+    if len(readings) > 48:
+        raise ValueError("A UTC day cannot contain more than 48 half-hour intervals")
+    verified = sum(reading.quality_flag == "verified" for reading in readings)
+    estimated = sum(reading.quality_flag == "estimated" for reading in readings)
+    explicitly_unavailable = sum(
+        reading.quality_flag in {"missing", "fault"} for reading in readings
+    )
+    implicit_missing = 48 - len(readings)
+    unavailable = explicitly_unavailable + implicit_missing
+    available = [
+        reading.electricity_kwh
+        for reading in readings
+        if reading.electricity_kwh is not None
+    ]
+    if verified == 48:
+        status = "complete_verified"
+    elif verified + estimated == 48:
+        status = "complete_with_estimates"
+    else:
+        status = "incomplete"
+    return DailyMeterSummary(
+        venue_id=next(iter(venue_ids)),
+        utc_date=next(iter(dates)),
+        available_kwh=sum(available),
+        verified_intervals=verified,
+        estimated_intervals=estimated,
+        unavailable_intervals=unavailable,
+        coverage_pct=(verified + estimated) / 48 * 100,
+        quality_status=status,
+    )
 
 
 def write_meter_csv(readings: list[MeterReading], output_path: Path) -> None:

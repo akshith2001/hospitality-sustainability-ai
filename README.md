@@ -73,6 +73,20 @@ The anomaly stage calculates a residual for each day:
 
 `residual = actual electricity - predicted electricity`
 
+## Report uncertainty and low confidence
+
+The software reports a central electricity prediction together with an empirical
+range estimated from training residuals:
+
+```bash
+python -m hospitality_ai.uncertainty --rows 1000 --seed 2026
+```
+
+It warns that confidence is low when there are fewer than 100 training observations
+or when a venue input falls outside the ranges represented in the training data. The
+range is a transparent model-based estimate, not a guarantee or a calibrated claim
+of real-world coverage.
+
 A robust threshold is learned from the median and median absolute deviation (MAD) of
 training residuals. A large positive residual creates an investigation alert:
 

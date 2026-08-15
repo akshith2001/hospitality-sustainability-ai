@@ -160,6 +160,9 @@ records customers and their quality status, opening hours, temperature, a
 non-identifying weather-station ID, a controlled special-event category and whether
 equipment changed. It contains no customer or employee identities and rejects impossible
 hours, implausible temperatures, unknown categories and duplicate venue/date records.
+Event size is stored as a count rather than client names and has its own `verified`,
+`estimated`, `missing` or `not_applicable` quality label. No event requires a count of zero;
+an event with unknown attendance requires a blank value marked `missing`.
 
 ## Train the first regression model
 

@@ -11,6 +11,7 @@ from .meter_data import VENUE_ID_PATTERN
 
 
 DATA_QUALITY = frozenset({"verified", "estimated"})
+EVENT_COUNT_QUALITY = frozenset({"verified", "estimated", "missing", "not_applicable"})
 EVENT_CATEGORIES = frozenset(
     {"none", "wedding", "conference", "private_event", "holiday", "other"}
 )
@@ -26,6 +27,8 @@ class DailyOperationalContext:
     outside_temperature_c: float
     weather_station_id: str
     special_event_category: str
+    event_guest_count: int | None
+    event_guest_count_quality: str
     equipment_change: bool
 
 
@@ -49,6 +52,21 @@ def validate_context(context: DailyOperationalContext) -> tuple[str, ...]:
         errors.append("weather_station_id is required")
     if context.special_event_category not in EVENT_CATEGORIES:
         errors.append("special_event_category is invalid")
+    if context.event_guest_count_quality not in EVENT_COUNT_QUALITY:
+        errors.append("event_guest_count_quality is invalid")
+    if context.special_event_category == "none":
+        if context.event_guest_count != 0:
+            errors.append("no event requires event_guest_count of 0")
+        if context.event_guest_count_quality != "not_applicable":
+            errors.append("no event requires not_applicable guest-count quality")
+    elif context.event_guest_count_quality == "missing":
+        if context.event_guest_count is not None:
+            errors.append("missing event guest count must have a blank value")
+    elif context.event_guest_count_quality in {"verified", "estimated"}:
+        if context.event_guest_count is None or context.event_guest_count < 0:
+            errors.append("known event guest count must be non-negative")
+    elif context.event_guest_count_quality == "not_applicable":
+        errors.append("an event cannot have not_applicable guest-count quality")
     if not isinstance(context.equipment_change, bool):
         errors.append("equipment_change must be boolean")
     return tuple(errors)

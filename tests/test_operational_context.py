@@ -21,6 +21,8 @@ def valid_context() -> DailyOperationalContext:
         outside_temperature_c=8.5,
         weather_station_id="WX-LONDON-01",
         special_event_category="wedding",
+        event_guest_count=150,
+        event_guest_count_quality="verified",
         equipment_change=False,
     )
 
@@ -40,6 +42,27 @@ class OperationalContextTests(unittest.TestCase):
     def test_unknown_event_category_is_rejected(self) -> None:
         errors = validate_context(replace(valid_context(), special_event_category="party name"))
         self.assertTrue(any("event" in error for error in errors))
+
+    def test_no_event_requires_zero_and_not_applicable_quality(self) -> None:
+        context = replace(
+            valid_context(),
+            special_event_category="none",
+            event_guest_count=0,
+            event_guest_count_quality="not_applicable",
+        )
+        self.assertEqual(validate_context(context), ())
+
+    def test_unknown_event_count_is_blank_and_missing(self) -> None:
+        context = replace(
+            valid_context(), event_guest_count=None, event_guest_count_quality="missing"
+        )
+        self.assertEqual(validate_context(context), ())
+
+    def test_estimated_event_count_is_distinct(self) -> None:
+        context = replace(
+            valid_context(), event_guest_count=140, event_guest_count_quality="estimated"
+        )
+        self.assertEqual(validate_context(context), ())
 
     def test_csv_is_written(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

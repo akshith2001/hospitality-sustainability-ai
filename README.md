@@ -2,6 +2,9 @@
 
 An educational, research-oriented project for building an explainable AI system that predicts resource consumption, detects unusual usage and recommends practical sustainability interventions for hospitality venues.
 
+The proposed real-data methodology, consent separation, privacy controls and model
+governance are documented in [the real-world study protocol](docs/REAL_WORLD_STUDY_PROTOCOL.md).
+
 ## Research question
 
 Can explainable machine learning use operational data to identify abnormal resource consumption and recommend an environmentally effective, financially sensible and operationally practical intervention for an individual hospitality venue?

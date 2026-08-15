@@ -51,6 +51,19 @@ Performance is measured using mean absolute error (MAE). A later machine-learnin
 model must beat this baseline on the same unseen test set to demonstrate useful
 predictive information.
 
+## Evaluation chart
+
+Generate an actual-versus-predicted chart for the unseen test set:
+
+```bash
+python -m hospitality_ai.evaluation_chart
+```
+
+![Actual versus predicted electricity use](figures/actual_vs_predicted.svg)
+
+Ordinary observations close to the dashed diagonal indicate accurate predictions.
+Red crosses are artificial excess-use cases included only to test the workflow.
+
 ## Train the first regression model
 
 The first learning model is multivariable linear regression implemented with the

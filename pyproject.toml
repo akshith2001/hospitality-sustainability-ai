@@ -18,6 +18,7 @@ explain-electricity-alert = "hospitality_ai.explain:main"
 recommend-electricity-action = "hospitality_ai.recommend:main"
 test-decision-weights = "hospitality_ai.decision_sensitivity:main"
 show-prediction-range = "hospitality_ai.uncertainty:main"
+plot-model-evaluation = "hospitality_ai.evaluation_chart:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

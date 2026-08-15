@@ -1,5 +1,10 @@
 # Hospitality Sustainability AI
 
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Tests](https://img.shields.io/badge/tests-78%20passing-2ea44f)](tests)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Data: Synthetic](https://img.shields.io/badge/data-synthetic-orange)](#synthetic-learning-data)
+
 An educational research prototype for predicting hospitality electricity consumption,
 detecting unusual excess use and ranking practical sustainability interventions. The
 project emphasises explainability, honest evaluation, data quality, privacy and human
@@ -10,6 +15,19 @@ oversight.
 > hospitality venues.
 
 ![Actual versus predicted electricity use](figures/actual_vs_predicted.svg)
+
+## Two-minute project tour
+
+1. Read the [research question](#research-question) and the synthetic-data warning above.
+2. Review the [current results](#current-results) and evaluation figure.
+3. Inspect the [model card](docs/MODEL_CARD.md) for intended use, risks and safeguards.
+4. Read the [real-world study protocol](docs/REAL_WORLD_STUDY_PROTOCOL.md) to see how the
+   prototype could be evaluated with genuine venue data.
+5. Run the test suite and experiments using the [quick-start commands](#quick-start).
+
+The central contribution is not a claim that synthetic results will transfer directly to
+real venues. It is a transparent, testable research pipeline connecting prediction,
+explanation, anomaly investigation, intervention comparison and human approval.
 
 ## Research question
 
@@ -151,11 +169,14 @@ all exclusion reasons are reported overall and by venue.
 The protocol must receive institutional ethics and data-protection approval before any
 real participants are recruited or monitoring equipment is installed.
 
+For a structured account of intended use, evaluation boundaries, foreseeable risks and
+release criteria, see the [model card](docs/MODEL_CARD.md).
+
 ## Repository structure
 
 ```text
 data/templates/       Example real-data formats
-docs/                 Proposed study protocol
+docs/                 Model card and proposed study protocol
 figures/              Reproducible evaluation chart
 src/hospitality_ai/   Modelling, validation and governance modules
 tests/                Automated unit tests

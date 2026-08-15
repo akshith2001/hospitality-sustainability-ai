@@ -164,6 +164,14 @@ Event size is stored as a count rather than client names and has its own `verifi
 `estimated`, `missing` or `not_applicable` quality label. No event requires a count of zero;
 an event with unknown attendance requires a blank value marked `missing`.
 
+## Join meter and operational data
+
+Daily meter summaries and operational context are joined only on the pseudonymous
+`venue_id` and `utc_date`. Unmatched meter and context keys are reported instead of being
+silently discarded. Duplicate daily meter summaries are rejected. Primary evaluation
+records require complete verified meter intervals, verified customer counts and either a
+verified event count or a confirmed no-event status.
+
 ## Train the first regression model
 
 The first learning model is multivariable linear regression implemented with the

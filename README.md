@@ -150,6 +150,11 @@ unavailable count and coverage percentage. It is not silently discarded and its 
 sum is never described as a complete daily total. A day containing all 48 intervals but
 one or more estimates is labelled `complete_with_estimates`, not `complete_verified`.
 
+For a complete verified day, the 48-interval sum is compared with an independently
+verified daily meter total. The illustrative default tolerance is 1% to allow documented
+rounding differences. A larger mismatch is flagged for investigation rather than silently
+corrected. Incomplete days are explicitly marked not comparable.
+
 ## Train the first regression model
 
 The first learning model is multivariable linear regression implemented with the

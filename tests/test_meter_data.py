@@ -5,6 +5,7 @@ from pathlib import Path
 from hospitality_ai.meter_data import (
     MeterReading,
     primary_evaluation_readings,
+    reconcile_daily_total,
     sensitivity_evaluation_readings,
     summarise_utc_day,
     validate_dataset,
@@ -69,6 +70,37 @@ class MeterDataTests(unittest.TestCase):
         summary = summarise_utc_day(readings)
         self.assertEqual(summary.quality_status, "complete_verified")
         self.assertEqual(summary.coverage_pct, 100.0)
+
+    def test_daily_total_reconciles_within_tolerance(self) -> None:
+        readings = []
+        for interval in range(48):
+            hour, minute_index = divmod(interval, 2)
+            readings.append(
+                valid_reading(f"2026-01-01T{hour:02d}:{minute_index * 30:02d}:00Z")
+            )
+        summary = summarise_utc_day(readings)
+        result = reconcile_daily_total(summary, verified_daily_total_kwh=602.0)
+        self.assertTrue(result.within_tolerance)
+        self.assertEqual(result.status, "reconciled")
+
+    def test_large_daily_total_mismatch_requires_investigation(self) -> None:
+        readings = []
+        for interval in range(48):
+            hour, minute_index = divmod(interval, 2)
+            readings.append(
+                valid_reading(f"2026-01-01T{hour:02d}:{minute_index * 30:02d}:00Z")
+            )
+        result = reconcile_daily_total(
+            summarise_utc_day(readings), verified_daily_total_kwh=500.0
+        )
+        self.assertFalse(result.within_tolerance)
+        self.assertIn("investigation", result.status)
+
+    def test_incomplete_day_is_not_reconciled(self) -> None:
+        result = reconcile_daily_total(
+            summarise_utc_day([valid_reading()]), verified_daily_total_kwh=12.5
+        )
+        self.assertEqual(result.status, "not_comparable_incomplete_intervals")
 
 
 if __name__ == "__main__":

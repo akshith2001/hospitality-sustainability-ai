@@ -34,6 +34,16 @@ class DailyMeterSummary:
     quality_status: str
 
 
+@dataclass(frozen=True)
+class DailyReconciliation:
+    interval_sum_kwh: float
+    verified_daily_total_kwh: float
+    difference_kwh: float
+    difference_pct: float
+    within_tolerance: bool
+    status: str
+
+
 def validate_reading(reading: MeterReading) -> tuple[str, ...]:
     """Return every validation problem rather than failing at the first one."""
     errors = []
@@ -136,6 +146,37 @@ def summarise_utc_day(readings: list[MeterReading]) -> DailyMeterSummary:
         unavailable_intervals=unavailable,
         coverage_pct=(verified + estimated) / 48 * 100,
         quality_status=status,
+    )
+
+
+def reconcile_daily_total(
+    summary: DailyMeterSummary,
+    verified_daily_total_kwh: float,
+    tolerance_pct: float = 1.0,
+) -> DailyReconciliation:
+    """Compare complete interval data with an independently verified daily total."""
+    if verified_daily_total_kwh < 0:
+        raise ValueError("verified_daily_total_kwh cannot be negative")
+    if tolerance_pct < 0:
+        raise ValueError("tolerance_pct cannot be negative")
+    difference = summary.available_kwh - verified_daily_total_kwh
+    denominator = max(verified_daily_total_kwh, 1e-9)
+    difference_pct = abs(difference) / denominator * 100
+    complete = summary.quality_status == "complete_verified"
+    within_tolerance = complete and difference_pct <= tolerance_pct
+    if not complete:
+        status = "not_comparable_incomplete_intervals"
+    elif within_tolerance:
+        status = "reconciled"
+    else:
+        status = "mismatch_requires_investigation"
+    return DailyReconciliation(
+        interval_sum_kwh=summary.available_kwh,
+        verified_daily_total_kwh=verified_daily_total_kwh,
+        difference_kwh=difference,
+        difference_pct=difference_pct,
+        within_tolerance=within_tolerance,
+        status=status,
     )
 
 

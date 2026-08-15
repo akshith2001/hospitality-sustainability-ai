@@ -10,6 +10,7 @@ import argparse
 import csv
 import random
 from dataclasses import asdict, dataclass
+from datetime import date, timedelta
 from pathlib import Path
 
 
@@ -23,6 +24,8 @@ VENUE_BASE_KWH = {
 
 @dataclass(frozen=True)
 class DailyVenueRecord:
+    date: str
+    day_of_week: str
     venue_type: str
     customers: int
     opening_hours: float
@@ -63,6 +66,7 @@ def generate_records(
     row_count: int = 1_000,
     seed: int = 2026,
     anomaly_rate: float = 0.05,
+    start_date: date = date(2026, 1, 1),
 ) -> list[DailyVenueRecord]:
     """Generate reproducible daily records with a small set of injected anomalies."""
     if row_count < 1:
@@ -73,7 +77,8 @@ def generate_records(
     rng = random.Random(seed)
     records = []
     venue_types = tuple(VENUE_BASE_KWH)
-    for _ in range(row_count):
+    for day_index in range(row_count):
+        observation_date = start_date + timedelta(days=day_index)
         venue_type = rng.choice(venue_types)
         customers = rng.randint(20, 450)
         opening_hours = rng.uniform(6.0, 18.0)
@@ -94,6 +99,8 @@ def generate_records(
         electricity_kwh = max(0.0, expected + ordinary_noise + excess_use)
         records.append(
             DailyVenueRecord(
+                date=observation_date.isoformat(),
+                day_of_week=observation_date.strftime("%A"),
                 venue_type=venue_type,
                 customers=customers,
                 opening_hours=round(opening_hours, 2),
@@ -135,4 +142,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

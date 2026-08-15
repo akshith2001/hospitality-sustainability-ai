@@ -16,6 +16,7 @@ class LinearModelTests(unittest.TestCase):
         self.assertEqual(len(features), len(FEATURE_NAMES))
         self.assertNotIn("electricity_kwh", FEATURE_NAMES)
         self.assertNotIn("is_injected_anomaly", FEATURE_NAMES)
+        self.assertIn("day_is_saturday", FEATURE_NAMES)
 
     def test_model_beats_mean_baseline(self) -> None:
         _, result = evaluate_linear_model(generate_records(1_000, seed=2026), seed=2026)

@@ -12,6 +12,8 @@ The first model will predict daily electricity consumption in kilowatt-hours.
 
 | Field | Role | Type | Meaning |
 |---|---|---|---|
+| `date` | identifier | ISO date | date of the daily observation |
+| `day_of_week` | feature | categorical | weekday derived from the date |
 | `venue_type` | feature | categorical | restaurant, hotel, bar or event venue |
 | `customers` | feature | numerical count | customers served that day |
 | `opening_hours` | feature | numerical continuous | hours open that day |
@@ -59,10 +61,11 @@ then evaluated on the untouched test set:
 python -m hospitality_ai.linear_model --rows 1000 --seed 2026
 ```
 
-Categorical venue type is represented using one-hot indicator features. The model
+Categorical venue type and day of the week are represented using one-hot indicator features. The model
 also receives squared distance from 18 C so that both unusually cold and unusually
-hot weather can increase predicted consumption. The injected anomaly label is never
-used as a prediction feature.
+hot weather can increase predicted consumption. The date identifies the observation
+but is not itself used as a numerical feature. The injected anomaly label is never used
+as a prediction feature.
 
 ## Detect unexpected excess consumption
 

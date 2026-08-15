@@ -19,6 +19,12 @@ FEATURE_NAMES = (
     "venue_is_hotel",
     "venue_is_bar",
     "venue_is_event_venue",
+    "day_is_tuesday",
+    "day_is_wednesday",
+    "day_is_thursday",
+    "day_is_friday",
+    "day_is_saturday",
+    "day_is_sunday",
 )
 
 
@@ -54,6 +60,12 @@ def encode_features(record: DailyVenueRecord) -> tuple[float, ...]:
         float(record.venue_type == "hotel"),
         float(record.venue_type == "bar"),
         float(record.venue_type == "event_venue"),
+        float(record.day_of_week == "Tuesday"),
+        float(record.day_of_week == "Wednesday"),
+        float(record.day_of_week == "Thursday"),
+        float(record.day_of_week == "Friday"),
+        float(record.day_of_week == "Saturday"),
+        float(record.day_of_week == "Sunday"),
     )
 
 
@@ -140,4 +152,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

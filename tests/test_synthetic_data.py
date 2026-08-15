@@ -1,5 +1,6 @@
 import tempfile
 import unittest
+from datetime import date
 from pathlib import Path
 
 from hospitality_ai.synthetic_data import (
@@ -23,12 +24,24 @@ class SyntheticDataTests(unittest.TestCase):
         self.assertTrue(all(record.electricity_kwh >= 0 for record in records))
         self.assertTrue(all(record.is_injected_anomaly in (0, 1) for record in records))
 
+    def test_dates_are_sequential_and_weekdays_match(self) -> None:
+        records = generate_records(3, seed=4, start_date=date(2026, 1, 1))
+        self.assertEqual(
+            [record.date for record in records],
+            ["2026-01-01", "2026-01-02", "2026-01-03"],
+        )
+        self.assertEqual(
+            [record.day_of_week for record in records],
+            ["Thursday", "Friday", "Saturday"],
+        )
+
     def test_csv_is_written(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "data.csv"
             write_csv(generate_records(10, seed=2), path)
             text = path.read_text(encoding="utf-8")
             self.assertIn("electricity_kwh", text)
+            self.assertIn("date,day_of_week", text)
             self.assertEqual(len(text.splitlines()), 11)
 
 

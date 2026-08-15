@@ -86,11 +86,13 @@ one pseudonymous venue can be excluded completely and used only for testing:
 
 ```bash
 python -m hospitality_ai.venue_validation --venue-id VENUE-001
+python -m hospitality_ai.venue_validation --all-venues
 ```
 
 The held-out venue ID never enters training and venue IDs are identifiers, not model
 features. Real research should repeat this process across multiple venues rather than
-relying on one favourable result.
+relying on one favourable result. The all-venues command reports every held-out result,
+the mean result and the best and worst venues to prevent cherry-picking.
 
 ## Proposed real-world data collection
 

@@ -21,6 +21,15 @@ class VenueEvaluation:
     improvement_pct: float
 
 
+@dataclass(frozen=True)
+class AllVenuesEvaluation:
+    results: tuple[VenueEvaluation, ...]
+    mean_model_mae_kwh: float
+    mean_improvement_pct: float
+    best_venue_id: str
+    worst_venue_id: str
+
+
 def leave_one_venue_out_split(
     records: list[DailyVenueRecord], held_out_venue_id: str
 ) -> tuple[list[DailyVenueRecord], list[DailyVenueRecord]]:
@@ -55,15 +64,48 @@ def evaluate_held_out_venue(
     )
 
 
+def evaluate_all_venues(records: list[DailyVenueRecord]) -> AllVenuesEvaluation:
+    """Repeat held-out evaluation for every venue without selecting favourites."""
+    venue_ids = sorted({record.venue_id for record in records})
+    if len(venue_ids) < 2:
+        raise ValueError("At least two venues are required")
+    results = tuple(evaluate_held_out_venue(records, venue_id) for venue_id in venue_ids)
+    best = min(results, key=lambda result: result.model_mae_kwh)
+    worst = max(results, key=lambda result: result.model_mae_kwh)
+    return AllVenuesEvaluation(
+        results=results,
+        mean_model_mae_kwh=sum(result.model_mae_kwh for result in results) / len(results),
+        mean_improvement_pct=sum(result.improvement_pct for result in results) / len(results),
+        best_venue_id=best.held_out_venue_id,
+        worst_venue_id=worst.held_out_venue_id,
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Evaluate on one unseen venue")
     parser.add_argument("--rows", type=int, default=2_000)
     parser.add_argument("--seed", type=int, default=2026)
     parser.add_argument("--venue-id", default="VENUE-001")
-    args = parser.parse_args()
-    result = evaluate_held_out_venue(
-        generate_records(args.rows, args.seed), args.venue_id
+    parser.add_argument(
+        "--all-venues", action="store_true", help="Evaluate every venue in turn"
     )
+    args = parser.parse_args()
+    records = generate_records(args.rows, args.seed)
+    if args.all_venues:
+        summary = evaluate_all_venues(records)
+        print("Leave-one-venue-out evaluation for every venue")
+        for result in summary.results:
+            print(
+                f"{result.held_out_venue_id}: model MAE {result.model_mae_kwh:,.2f} kWh; "
+                f"baseline {result.baseline_mae_kwh:,.2f} kWh; "
+                f"improvement {result.improvement_pct:,.1f}%"
+            )
+        print(f"Mean model MAE: {summary.mean_model_mae_kwh:,.2f} kWh")
+        print(f"Mean improvement: {summary.mean_improvement_pct:,.1f}%")
+        print(f"Best venue by MAE: {summary.best_venue_id}")
+        print(f"Worst venue by MAE: {summary.worst_venue_id}")
+        return
+    result = evaluate_held_out_venue(records, args.venue_id)
     print("Leave-one-venue-out evaluation")
     print(f"Held-out venue: {result.held_out_venue_id}")
     print(f"Training venues: {result.training_venues}")

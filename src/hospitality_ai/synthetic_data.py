@@ -26,6 +26,7 @@ VENUE_BASE_KWH = {
 class DailyVenueRecord:
     date: str
     day_of_week: str
+    venue_id: str
     venue_type: str
     customers: int
     opening_hours: float
@@ -101,6 +102,7 @@ def generate_records(
             DailyVenueRecord(
                 date=observation_date.isoformat(),
                 day_of_week=observation_date.strftime("%A"),
+                venue_id=f"VENUE-{venue_types.index(venue_type) * 5 + day_index % 5 + 1:03d}",
                 venue_type=venue_type,
                 customers=customers,
                 opening_hours=round(opening_hours, 2),

@@ -20,6 +20,7 @@ test-decision-weights = "hospitality_ai.decision_sensitivity:main"
 show-prediction-range = "hospitality_ai.uncertainty:main"
 plot-model-evaluation = "hospitality_ai.evaluation_chart:main"
 evaluate-newest-month = "hospitality_ai.temporal_validation:main"
+evaluate-unseen-venue = "hospitality_ai.venue_validation:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

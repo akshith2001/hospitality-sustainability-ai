@@ -14,6 +14,7 @@ The first model will predict daily electricity consumption in kilowatt-hours.
 |---|---|---|---|
 | `date` | identifier | ISO date | date of the daily observation |
 | `day_of_week` | feature | categorical | weekday derived from the date |
+| `venue_id` | identifier | pseudonymous category | random-style research identifier, excluded from model features |
 | `venue_type` | feature | categorical | restaurant, hotel, bar or event venue |
 | `customers` | feature | numerical count | customers served that day |
 | `opening_hours` | feature | numerical continuous | hours open that day |
@@ -77,6 +78,19 @@ python -m hospitality_ai.temporal_validation --rows 365 --test-days 30
 
 The training period always ends before the test period begins, preventing future
 readings from leaking into model training.
+
+## Unseen-venue validation
+
+To test whether the method generalises beyond venues represented during training,
+one pseudonymous venue can be excluded completely and used only for testing:
+
+```bash
+python -m hospitality_ai.venue_validation --venue-id VENUE-001
+```
+
+The held-out venue ID never enters training and venue IDs are identifiers, not model
+features. Real research should repeat this process across multiple venues rather than
+relying on one favourable result.
 
 ## Proposed real-world data collection
 

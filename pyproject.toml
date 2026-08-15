@@ -12,6 +12,7 @@ requires-python = ">=3.10"
 [project.scripts]
 generate-hospitality-data = "hospitality_ai.synthetic_data:main"
 evaluate-baseline = "hospitality_ai.baseline:main"
+train-electricity-model = "hospitality_ai.linear_model:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

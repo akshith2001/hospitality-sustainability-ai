@@ -49,6 +49,21 @@ Performance is measured using mean absolute error (MAE). A later machine-learnin
 model must beat this baseline on the same unseen test set to demonstrate useful
 predictive information.
 
+## Train the first regression model
+
+The first learning model is multivariable linear regression implemented with the
+Python standard library. It learns coefficients from the training set only and is
+then evaluated on the untouched test set:
+
+```bash
+python -m hospitality_ai.linear_model --rows 1000 --seed 2026
+```
+
+Categorical venue type is represented using one-hot indicator features. The model
+also receives squared distance from 18 C so that both unusually cold and unusually
+hot weather can increase predicted consumption. The injected anomaly label is never
+used as a prediction feature.
+
 ## Planned stages
 
 1. Transparent non-AI baseline

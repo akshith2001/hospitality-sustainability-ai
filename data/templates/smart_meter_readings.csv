@@ -1,0 +1,5 @@
+venue_id,interval_start_utc,interval_minutes,electricity_kwh,quality_flag
+VENUE-0001,2026-01-01T00:00:00Z,30,12.5,verified
+VENUE-0001,2026-01-01T00:30:00Z,30,12.8,verified
+VENUE-0001,2026-01-01T01:00:00Z,30,,missing
+VENUE-0001,2026-01-01T01:30:00Z,30,13.1,estimated

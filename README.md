@@ -125,6 +125,20 @@ re-identification key is stored separately with restricted access. Daily operati
 context may include customers, opening hours, weather, special events and documented
 equipment changes.
 
+The example [smart-meter CSV](data/templates/smart_meter_readings.csv) uses this schema:
+
+| Field | Meaning |
+|---|---|
+| `venue_id` | pseudonymous identifier in `VENUE-0000` format |
+| `interval_start_utc` | ISO 8601 UTC timestamp on a `:00` or `:30` boundary |
+| `interval_minutes` | fixed at 30 |
+| `electricity_kwh` | non-negative interval consumption, blank if missing or faulty |
+| `quality_flag` | `verified`, `estimated`, `missing` or `fault` |
+
+UTC timestamps prevent daylight-saving clock changes from creating duplicated or missing
+local times. The validator rejects malformed identifiers, misaligned timestamps, negative
+consumption, contradictory missing values and duplicate venue/timestamp pairs.
+
 ## Train the first regression model
 
 The first learning model is multivariable linear regression implemented with the

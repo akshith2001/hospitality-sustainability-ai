@@ -102,6 +102,12 @@ only makes the candidate eligible for human review; an authorised research,
 sustainability or model-governance reviewer must then approve it. Failed or unapproved
 candidates cannot be marked eligible for deployment.
 
+After deployment, observed MAE is compared with the approved evaluation level. The
+illustrative default tolerance is a 25% increase. Exceeding it pauses sustainability
+recommendations and requests human review while data collection continues. The system
+does not automatically deploy a replacement or perform a rollback; reviewers decide
+the next action using versioned model and evaluation records.
+
 ## Proposed real-world data collection
 
 A real study should collect automatic 30-minute smart-meter readings plus verified

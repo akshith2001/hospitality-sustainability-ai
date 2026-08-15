@@ -23,6 +23,15 @@ class ModelPromotion:
         return self.evaluation_passed and self.approved_by_role is not None
 
 
+@dataclass(frozen=True)
+class MonitoringDecision:
+    approved_mae_kwh: float
+    observed_mae_kwh: float
+    degradation_limit_pct: float
+    recommendations_paused: bool
+    action: str
+
+
 def evaluate_candidate(
     current_mae_kwh: float,
     candidate_mae_kwh: float,
@@ -64,3 +73,29 @@ def approve_candidate(promotion: ModelPromotion, approver_role: str) -> ModelPro
     if approver_role not in APPROVER_ROLES:
         raise ValueError("Approver role is not authorised")
     return replace(promotion, approved_by_role=approver_role)
+
+
+def monitor_deployed_model(
+    approved_mae_kwh: float,
+    observed_mae_kwh: float,
+    degradation_limit_pct: float = 25.0,
+) -> MonitoringDecision:
+    """Pause recommendations when observed error exceeds the approved tolerance."""
+    if approved_mae_kwh <= 0 or observed_mae_kwh < 0:
+        raise ValueError("MAE values must be valid and approved_mae_kwh must be positive")
+    if degradation_limit_pct <= 0:
+        raise ValueError("degradation_limit_pct must be positive")
+    limit = approved_mae_kwh * (1 + degradation_limit_pct / 100)
+    paused = observed_mae_kwh > limit
+    action = (
+        "Pause recommendations and request human review; continue collecting data."
+        if paused
+        else "Continue monitored operation."
+    )
+    return MonitoringDecision(
+        approved_mae_kwh=approved_mae_kwh,
+        observed_mae_kwh=observed_mae_kwh,
+        degradation_limit_pct=degradation_limit_pct,
+        recommendations_paused=paused,
+        action=action,
+    )

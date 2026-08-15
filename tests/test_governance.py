@@ -1,6 +1,10 @@
 import unittest
 
-from hospitality_ai.governance import approve_candidate, evaluate_candidate
+from hospitality_ai.governance import (
+    approve_candidate,
+    evaluate_candidate,
+    monitor_deployed_model,
+)
 
 
 class GovernanceTests(unittest.TestCase):
@@ -24,6 +28,19 @@ class GovernanceTests(unittest.TestCase):
         promotion = evaluate_candidate(25.0, 26.0, 35.0, 40.0)
         with self.assertRaises(ValueError):
             approve_candidate(promotion, "research")
+
+    def test_large_performance_drop_pauses_recommendations(self) -> None:
+        decision = monitor_deployed_model(20.0, 27.0, degradation_limit_pct=25.0)
+        self.assertTrue(decision.recommendations_paused)
+        self.assertIn("human review", decision.action)
+
+    def test_performance_within_limit_continues_monitoring(self) -> None:
+        decision = monitor_deployed_model(20.0, 24.0, degradation_limit_pct=25.0)
+        self.assertFalse(decision.recommendations_paused)
+
+    def test_invalid_monitoring_limit_is_rejected(self) -> None:
+        with self.assertRaises(ValueError):
+            monitor_deployed_model(20.0, 24.0, degradation_limit_pct=0)
 
 
 if __name__ == "__main__":

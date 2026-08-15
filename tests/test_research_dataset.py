@@ -5,6 +5,7 @@ from hospitality_ai.meter_data import DailyMeterSummary
 from hospitality_ai.operational_context import DailyOperationalContext
 from hospitality_ai.research_dataset import (
     build_data_quality_report,
+    build_venue_quality_reports,
     join_daily_data,
     primary_evaluation_records,
 )
@@ -72,6 +73,21 @@ class ResearchDatasetTests(unittest.TestCase):
         self.assertEqual(report.unmatched_meter_count, 1)
         self.assertEqual(reasons["customers_not_verified"], 1)
         self.assertEqual(reasons["operational_context_missing"], 1)
+
+    def test_venue_quality_report_exposes_uneven_missingness(self) -> None:
+        second_venue = replace(
+            meter_summary("2026-01-01"), venue_id="VENUE-0002"
+        )
+        summaries = [meter_summary(), second_venue]
+        contexts = [context()]
+        result = join_daily_data(summaries, contexts)
+        reports = {
+            report.venue_id: report
+            for report in build_venue_quality_reports(result, summaries, contexts)
+        }
+        self.assertEqual(reports["VENUE-0001"].primary_evaluation_count, 1)
+        self.assertEqual(reports["VENUE-0002"].unmatched_meter_count, 1)
+        self.assertEqual(reports["VENUE-0002"].primary_evaluation_count, 0)
 
 
 if __name__ == "__main__":

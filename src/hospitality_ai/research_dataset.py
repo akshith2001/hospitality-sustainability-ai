@@ -52,6 +52,17 @@ class DataQualityReport:
     exclusion_reasons: tuple[tuple[str, int], ...]
 
 
+@dataclass(frozen=True)
+class VenueQualityReport:
+    venue_id: str
+    meter_summary_count: int
+    context_count: int
+    joined_count: int
+    primary_evaluation_count: int
+    unmatched_meter_count: int
+    unmatched_context_count: int
+
+
 def join_daily_data(
     meter_summaries: list[DailyMeterSummary],
     contexts: list[DailyOperationalContext],
@@ -132,3 +143,38 @@ def build_data_quality_report(
         unmatched_context_count=len(result.unmatched_context_keys),
         exclusion_reasons=tuple(sorted(reasons.items())),
     )
+
+
+def build_venue_quality_reports(
+    result: DatasetJoinResult,
+    meter_summaries: list[DailyMeterSummary],
+    contexts: list[DailyOperationalContext],
+) -> tuple[VenueQualityReport, ...]:
+    """Expose collection and eligibility differences for every pseudonymous venue."""
+    venue_ids = sorted(
+        {summary.venue_id for summary in meter_summaries}
+        | {context.venue_id for context in contexts}
+    )
+    reports = []
+    for venue_id in venue_ids:
+        venue_records = [record for record in result.records if record.venue_id == venue_id]
+        reports.append(
+            VenueQualityReport(
+                venue_id=venue_id,
+                meter_summary_count=sum(
+                    summary.venue_id == venue_id for summary in meter_summaries
+                ),
+                context_count=sum(context.venue_id == venue_id for context in contexts),
+                joined_count=len(venue_records),
+                primary_evaluation_count=sum(
+                    record.eligible_for_primary_evaluation for record in venue_records
+                ),
+                unmatched_meter_count=sum(
+                    key[0] == venue_id for key in result.unmatched_meter_keys
+                ),
+                unmatched_context_count=sum(
+                    key[0] == venue_id for key in result.unmatched_context_keys
+                ),
+            )
+        )
+    return tuple(reports)

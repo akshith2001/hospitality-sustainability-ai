@@ -176,6 +176,8 @@ A data-quality report publishes meter-summary and context totals, successful joi
 primary-evaluation records, unmatched rows and counts for every exclusion reason. Reasons
 may overlap—for example, one day can have both estimated customers and an unverified event
 count—so the report does not misleadingly force each excluded row into only one category.
+The same collection, matching and primary-eligibility counts are reported separately for
+every pseudonymous venue to expose uneven missingness and possible selection bias.
 
 ## Train the first regression model
 

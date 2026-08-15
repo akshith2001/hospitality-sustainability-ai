@@ -87,6 +87,18 @@ or when a venue input falls outside the ranges represented in the training data.
 range is a transparent model-based estimate, not a guarantee or a calibrated claim
 of real-world coverage.
 
+## Anonymous, human-reviewed feedback
+
+Staff can classify an alert as confirmed waste, equipment fault, special event,
+incorrect data, normal operation or unknown. The feedback record contains a random
+ID, alert ID, venue ID, timestamp, category, action and optional notes. It does not
+contain an employee name, employee number, email address, IP address or device ID.
+
+New feedback has `pending` status and is not eligible for model training. It must be
+reviewed for accuracy and explicitly approved first. Managers should receive the
+operational information required to investigate an alert but must not be given a way
+to identify the employee who submitted anonymous feedback.
+
 A robust threshold is learned from the median and median absolute deviation (MAD) of
 training residuals. A large positive residual creates an investigation alert:
 

@@ -64,6 +64,29 @@ python -m hospitality_ai.evaluation_chart
 Ordinary observations close to the dashed diagonal indicate accurate predictions.
 Red crosses are artificial excess-use cases included only to test the workflow.
 
+## Chronological validation
+
+Random splitting is useful for an initial software experiment, but operational
+deployment must test whether a model trained on the past can predict the future. The
+chronological evaluation reserves the newest 30 daily observations as an untouched
+test period:
+
+```bash
+python -m hospitality_ai.temporal_validation --rows 365 --test-days 30
+```
+
+The training period always ends before the test period begins, preventing future
+readings from leaking into model training.
+
+## Proposed real-world data collection
+
+A real study should collect automatic 30-minute smart-meter readings plus verified
+daily totals for at least one full year. Venue names and full addresses should not
+appear in model-training files. Each venue should use a random research ID, while any
+re-identification key is stored separately with restricted access. Daily operational
+context may include customers, opening hours, weather, special events and documented
+equipment changes.
+
 ## Train the first regression model
 
 The first learning model is multivariable linear regression implemented with the

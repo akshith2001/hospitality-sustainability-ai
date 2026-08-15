@@ -1,7 +1,7 @@
 # Hospitality Sustainability AI
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/tests-78%20passing-2ea44f)](tests)
+[![Tests](https://img.shields.io/badge/tests-80%20passing-2ea44f)](tests)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Data: Synthetic](https://img.shields.io/badge/data-synthetic-orange)](#synthetic-learning-data)
 
@@ -15,6 +15,8 @@ oversight.
 > hospitality venues.
 
 ![Actual versus predicted electricity use](figures/actual_vs_predicted.svg)
+
+![Baseline and model MAE across evaluation designs](figures/generalisation_mae.svg)
 
 ## Two-minute project tour
 
@@ -41,7 +43,7 @@ and operationally practical intervention for an individual venue?
 |---|---:|---:|---:|
 | Reproducible random 80/20 split | 77.27 kWh | 21.73 kWh | 71.9% |
 | Newest 30-day chronological test | 105.93 kWh | 30.89 kWh | 70.8% |
-| Mean across 20 held-out venues | varies by venue | 21.80 kWh | 71.4% mean |
+| Mean across 20 held-out venues | 76.39 kWh | 21.80 kWh | 71.4% mean |
 
 The held-out venue analysis reports all 20 venues rather than selecting the best result.
 Current anomaly evaluation achieved 81.8% precision and 100% recall on deliberately
@@ -83,6 +85,7 @@ python -m hospitality_ai.venue_validation --rows 2000 --all-venues
 python -m hospitality_ai.anomaly --rows 1000 --seed 2026
 python -m hospitality_ai.uncertainty --rows 1000 --seed 2026
 python -m hospitality_ai.evaluation_chart
+python -m hospitality_ai.generalisation_chart
 ```
 
 Explain an alert and compare feasible interventions:

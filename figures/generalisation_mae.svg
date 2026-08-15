@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="610" viewBox="0 0 900 610" role="img" aria-labelledby="title desc">
+<title id="title">Baseline and regression MAE across evaluation designs</title>
+<desc id="desc">For each unseen-data evaluation, the blue regression-model bar is lower than the grey mean-baseline bar. All results use synthetic data.</desc>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="450" y="34" text-anchor="middle" font-family="Arial" font-size="22" font-weight="bold" fill="#172033">Generalisation error across evaluation designs</text>
+<text x="450" y="58" text-anchor="middle" font-family="Arial" font-size="13" fill="#536078">Lower MAE is better; reproducible synthetic learning data</text>
+<rect x="100" y="110" width="755" height="385" fill="#f8fafc" stroke="#aab4c3"/>
+<line x1="100" y1="495.0" x2="855" y2="495.0" stroke="#dfe4ea"/>
+<text x="88" y="499.0" text-anchor="end" font-family="Arial" font-size="12" fill="#48566a">0</text>
+<line x1="100" y1="418.0" x2="855" y2="418.0" stroke="#dfe4ea"/>
+<text x="88" y="422.0" text-anchor="end" font-family="Arial" font-size="12" fill="#48566a">24</text>
+<line x1="100" y1="341.0" x2="855" y2="341.0" stroke="#dfe4ea"/>
+<text x="88" y="345.0" text-anchor="end" font-family="Arial" font-size="12" fill="#48566a">49</text>
+<line x1="100" y1="264.0" x2="855" y2="264.0" stroke="#dfe4ea"/>
+<text x="88" y="268.0" text-anchor="end" font-family="Arial" font-size="12" fill="#48566a">73</text>
+<line x1="100" y1="187.0" x2="855" y2="187.0" stroke="#dfe4ea"/>
+<text x="88" y="191.0" text-anchor="end" font-family="Arial" font-size="12" fill="#48566a">97</text>
+<line x1="100" y1="110.0" x2="855" y2="110.0" stroke="#dfe4ea"/>
+<text x="88" y="114.0" text-anchor="end" font-family="Arial" font-size="12" fill="#48566a">122</text>
+<rect x="158.8" y="250.8" width="62" height="244.2" fill="#7b8794"/>
+<text x="189.8" y="242.8" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#172033">77.3</text>
+<rect x="230.8" y="426.3" width="62" height="68.7" fill="#2672b8"/>
+<text x="261.8" y="418.3" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#172033">21.7</text>
+<text x="225.8" y="523" text-anchor="middle" font-family="Arial" font-size="13" fill="#172033">Random 80/20 split</text>
+<rect x="410.5" y="160.2" width="62" height="334.8" fill="#7b8794"/>
+<text x="441.5" y="152.2" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#172033">105.9</text>
+<rect x="482.5" y="397.4" width="62" height="97.6" fill="#2672b8"/>
+<text x="513.5" y="389.4" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#172033">30.9</text>
+<text x="477.5" y="523" text-anchor="middle" font-family="Arial" font-size="13" fill="#172033">Newest 30 days</text>
+<rect x="662.2" y="253.6" width="62" height="241.4" fill="#7b8794"/>
+<text x="693.2" y="245.6" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#172033">76.4</text>
+<rect x="734.2" y="426.1" width="62" height="68.9" fill="#2672b8"/>
+<text x="765.2" y="418.1" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#172033">21.8</text>
+<text x="729.2" y="523" text-anchor="middle" font-family="Arial" font-size="13" fill="#172033">Held-out venue mean</text>
+<text x="24" y="302.5" text-anchor="middle" transform="rotate(-90 24 302.5)" font-family="Arial" font-size="15" fill="#172033">MAE (kWh/day)</text>
+<rect x="305" y="80" width="16" height="16" fill="#7b8794"/>
+<text x="330" y="93" font-family="Arial" font-size="13" fill="#172033">Mean baseline</text>
+<rect x="470" y="80" width="16" height="16" fill="#2672b8"/>
+<text x="495" y="93" font-family="Arial" font-size="13" fill="#172033">Linear regression</text>
+<text x="450" y="574" text-anchor="middle" font-family="Arial" font-size="12" fill="#536078">Results demonstrate the pipeline, not real-world accuracy.</text>
+</svg>

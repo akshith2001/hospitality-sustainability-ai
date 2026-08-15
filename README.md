@@ -81,6 +81,19 @@ An alert is not proof of waste. It may reflect a special event, missing feature,
 sensor problem or genuine operational change. The synthetic anomaly label is used
 only after prediction to calculate precision and recall.
 
+## Explain a prediction
+
+The explanation command selects the largest positive test residual and reports the
+predicted value, actual value, alert threshold and contribution of every feature:
+
+```bash
+python -m hospitality_ai.explain --rows 1000 --seed 2026
+```
+
+For linear regression, each contribution is exactly `input value x learned
+coefficient`, and the contributions sum to the prediction. The explanation describes
+association within this model, not causation in a real venue.
+
 ## Planned stages
 
 1. Transparent non-AI baseline

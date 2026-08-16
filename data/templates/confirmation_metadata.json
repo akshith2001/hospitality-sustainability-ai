@@ -1,0 +1,10 @@
+{
+  "dataset_id": "replace-with-stable-dataset-id",
+  "dataset_title": "Replace with dataset title",
+  "source_url": "https://example.org/dataset",
+  "license": "Replace with licence name or identifier",
+  "venue_inclusion_rule": "Define the rule before opening confirmation outcomes",
+  "confirmation_start_date": "YYYY-MM-DD",
+  "confirmation_end_date": "YYYY-MM-DD",
+  "outcomes_unseen_at_freeze": true
+}

@@ -37,6 +37,12 @@ class RealDataEvaluationTests(unittest.TestCase):
         self.assertLess(result.model_mae_kwh, result.baseline_mae_kwh)
         self.assertEqual(len(result.venue_results), 2)
 
+    def test_reports_all_leakage_safe_time_series_baselines(self) -> None:
+        result = evaluate_real_data(records(), test_days=5)
+        self.assertIsNotNone(result.previous_day_mae_kwh)
+        self.assertIsNotNone(result.seven_day_rolling_mean_mae_kwh)
+        self.assertIsNotNone(result.same_weekday_last_week_mae_kwh)
+
     def test_invalid_test_period_is_rejected(self) -> None:
         with self.assertRaises(ValueError):
             chronological_split(records(), test_days=0)

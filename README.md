@@ -23,11 +23,13 @@ oversight.
 1. Read the [research question](#research-question) and the synthetic-data warning above.
 2. Review the [current results](#current-results) and evaluation figure.
 3. Inspect the [model card](docs/MODEL_CARD.md) for intended use, risks and safeguards.
-4. Read the [research report](docs/Hospitality_Sustainability_AI_Research_Report.pdf) for a
+4. Review the [frozen future-evaluation specification](docs/FROZEN_EVALUATION_SPECIFICATION.md)
+   before collecting or opening new confirmation outcomes.
+5. Read the [research report](docs/Hospitality_Sustainability_AI_Research_Report.pdf) for a
    concise account of the real-data method, results, limitations and next experiments.
-5. Read the [real-world study protocol](docs/REAL_WORLD_STUDY_PROTOCOL.md) to see how the
+6. Read the [real-world study protocol](docs/REAL_WORLD_STUDY_PROTOCOL.md) to see how the
    prototype could be evaluated with genuine venue data.
-6. Run the test suite and experiments using the [quick-start commands](#quick-start).
+7. Run the test suite and experiments using the [quick-start commands](#quick-start).
 
 The central contribution is not a claim that synthetic results will transfer directly to
 real venues. It is a transparent, testable research pipeline connecting prediction,
@@ -83,6 +85,11 @@ at **134.89 kWh/day**. It led for five of eight venues, so the result is promisi
 uniform. Its later failure to beat previous day on the final period demonstrates temporal
 instability rather than invalidating either result. See the
 [full rolling-validation note](docs/ROLLING_VALIDATION_RESULTS.md).
+
+The next confirmatory experiment is fixed in the
+[future-evaluation specification](docs/FROZEN_EVALUATION_SPECIFICATION.md). It requires
+genuinely new data and defines success as at least 5% lower pooled MAE than previous day,
+plus improvement for at least half of eligible venues.
 
 ### Completely unseen-venue evaluation
 

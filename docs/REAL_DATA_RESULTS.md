@@ -15,6 +15,11 @@ hospitality-related buildings selected from Building Data Genome 2?
   for buildings larger than 1,500 square metres; the rule is applied before splitting
 - Test: the newest 60 dates, beginning 2017-11-02
 - Baseline: each venue's mean daily kWh calculated from training data only
+- Time-series baselines: previous calendar day, mean of the seven most recent earlier
+  observations, and the same weekday seven calendar days earlier
+- Leakage control: predictions are made in date order. A test day's actual usage becomes
+  available only after that whole date has been predicted, as in a daily rolling-origin
+  backtest. Missing lags fall back to that venue's training-period mean.
 - Model: ordinary least squares with venue identity, outdoor-temperature terms, weekday,
   annual seasonality and venue-specific annual seasonality
 - Metric: mean absolute error (MAE), where lower is better
@@ -24,10 +29,16 @@ hospitality-related buildings selected from Building Data Genome 2?
 | Evaluation | Rows | MAE (kWh/day) |
 |---|---:|---:|
 | Per-venue historical-mean baseline | 266 | 651.73 |
+| Previous-day baseline | 266 | 159.83 |
+| Seven-day rolling-mean baseline | 266 | 271.92 |
+| Same weekday one week earlier | 266 | 364.68 |
 | Seasonal linear model | 266 | 523.42 |
 
-Overall MAE improved by **19.7%**. The model performed better than the baseline for four of
-five eligible test venues and worse for `Fox_food_Scott`.
+Against the original per-venue mean, overall model MAE improved by **19.7%**. This retains
+the project's existing evaluation rule and result. However, all three time-series
+baselines were more accurate than the seasonal linear model; the previous-day baseline
+was strongest at **159.83 kWh/day**. The model performed better than the original mean
+baseline for four of five eligible test venues and worse for `Fox_food_Scott`.
 
 Three source venues had no eligible test-period readings after the documented near-zero
 meter-state rule: `Lamb_food_Sylvia`, `Lamb_lodging_Harley` and
@@ -44,13 +55,14 @@ revision before examining their test results.
 
 ## Interpretation
 
-The result shows useful but uneven predictive value from weather, calendar and seasonal
-features. It does not establish reliable performance for every building. The missing
+The added comparisons show that recent venue history is substantially more predictive in
+this test period than the current weather, calendar and seasonal model. The original mean
+comparison was too weak to establish that the model was operationally competitive. The missing
 test-period venues are an important data-availability limitation, not successful model
 results. Reporting them prevents the stronger aggregate score from hiding selection bias.
 
 The experiment does not demonstrate causality, verified waste, intervention savings or
 generalisation to unseen venues. Customer counts, opening hours, equipment counts and
-intervention outcomes are unavailable in BDG2. A next experiment should investigate
-venue-specific failures and compare the model with stronger time-series baselines without
-using future information.
+intervention outcomes are unavailable in BDG2. A next experiment should test a model that
+combines leakage-safe lag features with weather and calendar inputs, using the same locked
+chronological boundary.

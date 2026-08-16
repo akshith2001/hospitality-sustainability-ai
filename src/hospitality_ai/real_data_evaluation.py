@@ -10,6 +10,7 @@ from math import cos, pi, sin
 from pathlib import Path
 
 from .linear_model import _solve_linear_system
+from .time_series_baselines import predict_time_series_baselines
 
 
 @dataclass(frozen=True)
@@ -40,6 +41,9 @@ class RealDataEvaluation:
     improvement_pct: float
     venue_results: tuple[VenueEvaluation, ...]
     missing_test_venues: tuple[str, ...] = ()
+    previous_day_mae_kwh: float | None = None
+    seven_day_rolling_mean_mae_kwh: float | None = None
+    same_weekday_last_week_mae_kwh: float | None = None
 
 
 @dataclass(frozen=True)
@@ -163,6 +167,7 @@ def evaluate_real_data(
     }
     actual = [record.electricity_kwh for record in test]
     baseline_predictions = [venue_means[record.venue_id] for record in test]
+    time_series_predictions = predict_time_series_baselines(training, test)
     model_predictions = [model.predict(record) for record in test]
     baseline_mae = mean_absolute_error(actual, baseline_predictions)
     model_mae = mean_absolute_error(actual, model_predictions)
@@ -199,6 +204,15 @@ def evaluate_real_data(
                 - {record.venue_id for record in test}
             )
         ),
+        previous_day_mae_kwh=mean_absolute_error(
+            actual, list(time_series_predictions.previous_day_kwh)
+        ),
+        seven_day_rolling_mean_mae_kwh=mean_absolute_error(
+            actual, list(time_series_predictions.seven_day_rolling_mean_kwh)
+        ),
+        same_weekday_last_week_mae_kwh=mean_absolute_error(
+            actual, list(time_series_predictions.same_weekday_last_week_kwh)
+        ),
     )
 
 
@@ -217,6 +231,15 @@ def main() -> None:
     print(f"Training ends: {result.training_end_date}")
     print(f"Unseen test period starts: {result.test_start_date}")
     print(f"Per-venue mean baseline MAE: {result.baseline_mae_kwh:,.2f} kWh/day")
+    print(f"Previous-day baseline MAE: {result.previous_day_mae_kwh:,.2f} kWh/day")
+    print(
+        "Seven-day rolling-mean baseline MAE: "
+        f"{result.seven_day_rolling_mean_mae_kwh:,.2f} kWh/day"
+    )
+    print(
+        "Same-weekday-one-week-earlier baseline MAE: "
+        f"{result.same_weekday_last_week_mae_kwh:,.2f} kWh/day"
+    )
     print(f"Linear model MAE: {result.model_mae_kwh:,.2f} kWh/day")
     print(f"MAE improvement: {result.improvement_pct:,.1f}%")
     print("Every held-out venue:")

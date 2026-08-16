@@ -55,13 +55,18 @@ injected synthetic excess-use cases. These figures are not real-world claims.
 
 ### Real-building evaluation
 
-| Evaluation | Test rows | Baseline MAE | Model MAE | Improvement |
-|---|---:|---:|---:|---:|
-| Newest 60 dates from eligible BDG2 venues | 266 | 651.73 kWh/day | 523.42 kWh/day | 19.7% |
+| Evaluation on newest 60 dates | Test rows | MAE (kWh/day) |
+|---|---:|---:|
+| Per-venue training mean | 266 | 651.73 |
+| Previous day | 266 | 159.83 |
+| Seven-day rolling mean | 266 | 271.92 |
+| Same weekday one week earlier | 266 | 364.68 |
+| Seasonal linear model | 266 | 523.42 |
 
-The real-data model improved on the baseline for four of five eligible test venues and
-worsened for one. Three additional source venues had no eligible test-period readings and
-are explicitly reported as missing. See the [full result note](docs/REAL_DATA_RESULTS.md).
+The real-data model improved on the original per-venue mean for four of five eligible test
+venues and worsened for one, but all three leakage-safe time-series baselines were stronger
+overall. Three additional source venues had no eligible test-period readings and are
+explicitly reported as missing. See the [full result note](docs/REAL_DATA_RESULTS.md).
 
 ### Completely unseen-venue evaluation
 
@@ -193,6 +198,12 @@ improvement**. Performance improved for four of five eligible test venues and wo
 one. Three other source venues had no eligible test-period readings and are reported as
 missing rather than scored.
 
+Stronger rolling-origin comparisons now show **159.83 kWh/day** for the previous-day
+baseline, **271.92 kWh/day** for the seven-day rolling mean, and **364.68 kWh/day** for the
+same weekday one week earlier. These baselines predict each date before observing it and
+only then add its actual values to history. This honest comparison shows the current model
+does not beat simple recent-history forecasts.
+
 ![Real-data MAE for every held-out venue](figures/bdg2_real_data_mae.svg)
 
 Full method, results and interpretation: [real-data evaluation](docs/REAL_DATA_RESULTS.md).
@@ -203,6 +214,8 @@ Full method, results and interpretation: [real-data evaluation](docs/REAL_DATA_R
 - **Primary error metric:** mean absolute error (MAE); lower is better.
 - **Random split:** initial reproducible 80/20 software experiment.
 - **Chronological split:** train on the past and reserve the newest month.
+- **Time-series baselines:** in chronological real-data evaluation, predict from strictly
+  earlier observations; update history only after each test date is predicted.
 - **Venue validation:** exclude each venue completely, report every result, and summarise
   mean, best and worst performance.
 - **Anomaly evaluation:** calculate precision and recall against injected labels.

@@ -1,7 +1,7 @@
 # Hospitality Sustainability AI
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/tests-125%20passing-2ea44f)](tests)
+[![Tests](https://img.shields.io/badge/tests-128%20passing-2ea44f)](tests)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Data: Real + Synthetic](https://img.shields.io/badge/data-real%20%2B%20synthetic-2ea44f)](#real-building-data)
 
@@ -172,6 +172,7 @@ python -m hospitality_ai.unseen_future_evaluation
 python -m hospitality_ai.rolling_validation
 python -m hospitality_ai.venue_data_readiness supplier_export.csv daily_weather.csv \
   prepared_daily.csv --venue-id VENUE-0001 --venue-type hotel
+python -m hospitality_ai.synthetic_confirmation_demo
 python -m hospitality_ai.confirmation_evaluation NEW_DAILY_DATA.csv \
   data/templates/confirmation_metadata.json
 ```
@@ -294,6 +295,11 @@ Complete interval sums are compared with independently verified daily totals usi
 illustrative 1% rounding tolerance. Mismatches are investigated, never silently corrected.
 Meter and operational records join only on `venue_id` and `utc_date`; unmatched records and
 all exclusion reasons are reported overall and by venue.
+
+Before real venue data arrives, the
+[synthetic confirmation rehearsal](docs/SYNTHETIC_CONFIRMATION_REHEARSAL.md) checks the
+complete software path. Its outputs are prominently labelled demonstration-only and are
+not evidence of real-world performance.
 
 ## Privacy and governance
 

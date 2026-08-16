@@ -10,6 +10,10 @@ from math import cos, pi, sin
 from pathlib import Path
 
 from .linear_model import _solve_linear_system
+from .lag_feature_model import (
+    build_lagged_test_observations,
+    fit_lag_feature_model,
+)
 from .time_series_baselines import predict_time_series_baselines
 
 
@@ -44,6 +48,7 @@ class RealDataEvaluation:
     previous_day_mae_kwh: float | None = None
     seven_day_rolling_mean_mae_kwh: float | None = None
     same_weekday_last_week_mae_kwh: float | None = None
+    lag_feature_model_mae_kwh: float | None = None
 
 
 @dataclass(frozen=True)
@@ -168,7 +173,12 @@ def evaluate_real_data(
     actual = [record.electricity_kwh for record in test]
     baseline_predictions = [venue_means[record.venue_id] for record in test]
     time_series_predictions = predict_time_series_baselines(training, test)
+    lag_feature_model = fit_lag_feature_model(training)
+    lagged_test = build_lagged_test_observations(test, time_series_predictions)
     model_predictions = [model.predict(record) for record in test]
+    lag_feature_predictions = [
+        lag_feature_model.predict(observation) for observation in lagged_test
+    ]
     baseline_mae = mean_absolute_error(actual, baseline_predictions)
     model_mae = mean_absolute_error(actual, model_predictions)
     improvement = (baseline_mae - model_mae) / baseline_mae * 100
@@ -213,6 +223,7 @@ def evaluate_real_data(
         same_weekday_last_week_mae_kwh=mean_absolute_error(
             actual, list(time_series_predictions.same_weekday_last_week_kwh)
         ),
+        lag_feature_model_mae_kwh=mean_absolute_error(actual, lag_feature_predictions),
     )
 
 
@@ -240,6 +251,7 @@ def main() -> None:
         "Same-weekday-one-week-earlier baseline MAE: "
         f"{result.same_weekday_last_week_mae_kwh:,.2f} kWh/day"
     )
+    print(f"Lag-feature model MAE: {result.lag_feature_model_mae_kwh:,.2f} kWh/day")
     print(f"Linear model MAE: {result.model_mae_kwh:,.2f} kWh/day")
     print(f"MAE improvement: {result.improvement_pct:,.1f}%")
     print("Every held-out venue:")

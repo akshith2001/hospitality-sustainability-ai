@@ -61,12 +61,18 @@ injected synthetic excess-use cases. These figures are not real-world claims.
 | Previous day | 266 | 159.83 |
 | Seven-day rolling mean | 266 | 271.92 |
 | Same weekday one week earlier | 266 | 364.68 |
+| Lag-feature linear model | 266 | 159.92 |
 | Seasonal linear model | 266 | 523.42 |
 
 The real-data model improved on the original per-venue mean for four of five eligible test
 venues and worsened for one, but all three leakage-safe time-series baselines were stronger
 overall. Three additional source venues had no eligible test-period readings and are
 explicitly reported as missing. See the [full result note](docs/REAL_DATA_RESULTS.md).
+
+An experimental model combining the three lag features with temperature, calendar and
+venue terms reached **159.92 kWh/day MAE**. This was a large improvement over the seasonal
+model, but it did not beat the fixed previous-day baseline at **159.83 kWh/day**. The
+near-tie is reported as a failed improvement, not rounded into a win.
 
 ### Completely unseen-venue evaluation
 
@@ -203,6 +209,10 @@ baseline, **271.92 kWh/day** for the seven-day rolling mean, and **364.68 kWh/da
 same weekday one week earlier. These baselines predict each date before observing it and
 only then add its actual values to history. This honest comparison shows the current model
 does not beat simple recent-history forecasts.
+
+The follow-up lag-feature model used those same leakage-safe recent-history values as
+inputs alongside weather and calendar features. It achieved **159.92 kWh/day MAE**, which
+is **0.09 kWh/day worse** than the previous-day baseline. No post-test tuning was performed.
 
 ![Real-data MAE for every held-out venue](figures/bdg2_real_data_mae.svg)
 

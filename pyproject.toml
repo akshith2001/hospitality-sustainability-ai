@@ -34,6 +34,7 @@ prepare-bdg2-hospitality-data = "hospitality_ai.bdg2_real_data:main"
 evaluate-bdg2-real-data = "hospitality_ai.real_data_evaluation:main"
 validate-bdg2-models = "hospitality_ai.rolling_validation:main"
 confirm-new-hospitality-data = "hospitality_ai.confirmation_evaluation:main"
+prepare-venue-data = "hospitality_ai.venue_data_readiness:main"
 plot-bdg2-real-data = "hospitality_ai.real_data_chart:main"
 diagnose-bdg2-venues = "hospitality_ai.real_data_diagnostics:main"
 

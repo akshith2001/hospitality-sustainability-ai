@@ -1,7 +1,7 @@
 # Hospitality Sustainability AI
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/tests-118%20passing-2ea44f)](tests)
+[![Tests](https://img.shields.io/badge/tests-125%20passing-2ea44f)](tests)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Data: Real + Synthetic](https://img.shields.io/badge/data-real%20%2B%20synthetic-2ea44f)](#real-building-data)
 
@@ -27,11 +27,13 @@ oversight.
    before collecting or opening new confirmation outcomes.
 5. Use the [frozen confirmation pipeline](docs/CONFIRMATION_PIPELINE.md) when genuinely new
    outcomes are available.
-6. Read the [research report](docs/Hospitality_Sustainability_AI_Research_Report.pdf) for a
+6. Prepare a venue's supplier export with the
+   [data-import and readiness tool](docs/VENUE_DATA_READINESS.md).
+7. Read the [research report](docs/Hospitality_Sustainability_AI_Research_Report.pdf) for a
    concise account of the real-data method, results, limitations and next experiments.
-7. Read the [real-world study protocol](docs/REAL_WORLD_STUDY_PROTOCOL.md) to see how the
+8. Read the [real-world study protocol](docs/REAL_WORLD_STUDY_PROTOCOL.md) to see how the
    prototype could be evaluated with genuine venue data.
-8. Run the test suite and experiments using the [quick-start commands](#quick-start).
+9. Run the test suite and experiments using the [quick-start commands](#quick-start).
 
 The central contribution is not a claim that synthetic results will transfer directly to
 real venues. It is a transparent, testable research pipeline connecting prediction,
@@ -168,6 +170,8 @@ python -m hospitality_ai.generalisation_chart
 python -m hospitality_ai.unseen_venue_evaluation
 python -m hospitality_ai.unseen_future_evaluation
 python -m hospitality_ai.rolling_validation
+python -m hospitality_ai.venue_data_readiness supplier_export.csv daily_weather.csv \
+  prepared_daily.csv --venue-id VENUE-0001 --venue-type hotel
 python -m hospitality_ai.confirmation_evaluation NEW_DAILY_DATA.csv \
   data/templates/confirmation_metadata.json
 ```

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from pathlib import Path
 
 from .lag_feature_model import (
@@ -229,11 +229,22 @@ def evaluate_frozen_confirmation(
     )
 
 
+def write_confirmation_report(
+    result: FrozenConfirmationResult, output_path: Path
+) -> None:
+    """Write the complete frozen result without changing its calculations."""
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(
+        json.dumps(asdict(result), indent=2) + "\n", encoding="utf-8"
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("data", type=Path)
     parser.add_argument("metadata", type=Path)
     parser.add_argument("--confirmation-days", type=int, default=MINIMUM_CONFIRMATION_DAYS)
+    parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     result = evaluate_frozen_confirmation(
         load_real_daily_records(args.data),
@@ -259,6 +270,9 @@ def main() -> None:
         "Frozen success criterion met: "
         + ("yes" if result.passed_frozen_success_rule else "no")
     )
+    if args.output:
+        write_confirmation_report(result, args.output)
+        print(f"Report written to: {args.output}")
 
 
 if __name__ == "__main__":

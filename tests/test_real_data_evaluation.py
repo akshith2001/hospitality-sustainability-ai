@@ -42,6 +42,7 @@ class RealDataEvaluationTests(unittest.TestCase):
         self.assertIsNotNone(result.previous_day_mae_kwh)
         self.assertIsNotNone(result.seven_day_rolling_mean_mae_kwh)
         self.assertIsNotNone(result.same_weekday_last_week_mae_kwh)
+        self.assertIsNotNone(result.lag_feature_model_mae_kwh)
 
     def test_invalid_test_period_is_rejected(self) -> None:
         with self.assertRaises(ValueError):

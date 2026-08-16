@@ -22,6 +22,10 @@ hospitality-related buildings selected from Building Data Genome 2?
   backtest. Missing lags fall back to that venue's training-period mean.
 - Model: ordinary least squares with venue identity, outdoor-temperature terms, weekday,
   annual seasonality and venue-specific annual seasonality
+- Lag-feature model: ordinary least squares combining venue, temperature, weekday and
+  annual seasonality with the same three leakage-safe recent-history values. Training
+  lags are built in date order; the first row per venue is omitted and missing later lags
+  use only that venue's expanding mean from earlier dates.
 - Metric: mean absolute error (MAE), where lower is better
 
 ## Results
@@ -32,6 +36,7 @@ hospitality-related buildings selected from Building Data Genome 2?
 | Previous-day baseline | 266 | 159.83 |
 | Seven-day rolling-mean baseline | 266 | 271.92 |
 | Same weekday one week earlier | 266 | 364.68 |
+| Lag-feature linear model | 266 | 159.92 |
 | Seasonal linear model | 266 | 523.42 |
 
 Against the original per-venue mean, overall model MAE improved by **19.7%**. This retains
@@ -39,6 +44,10 @@ the project's existing evaluation rule and result. However, all three time-serie
 baselines were more accurate than the seasonal linear model; the previous-day baseline
 was strongest at **159.83 kWh/day**. The model performed better than the original mean
 baseline for four of five eligible test venues and worse for `Fox_food_Scott`.
+
+The lag-feature model reduced MAE from 523.42 to **159.92 kWh/day**, but remained
+**0.09 kWh/day worse** than the previous-day baseline. This is treated as no improvement.
+The specification was not adjusted after observing this held-out result.
 
 Three source venues had no eligible test-period readings after the documented near-zero
 meter-state rule: `Lamb_food_Sylvia`, `Lamb_lodging_Harley` and
@@ -56,13 +65,16 @@ revision before examining their test results.
 ## Interpretation
 
 The added comparisons show that recent venue history is substantially more predictive in
-this test period than the current weather, calendar and seasonal model. The original mean
-comparison was too weak to establish that the model was operationally competitive. The missing
+this test period than the current weather, calendar and seasonal model. Adding those
+recent-history signals closes nearly all of the gap, but the weather and calendar terms do
+not improve aggregate MAE beyond carrying forward the previous day's reading. The original
+mean comparison was too weak to establish that the model was operationally competitive. The missing
 test-period venues are an important data-availability limitation, not successful model
 results. Reporting them prevents the stronger aggregate score from hiding selection bias.
 
 The experiment does not demonstrate causality, verified waste, intervention savings or
 generalisation to unseen venues. Customer counts, opening hours, equipment counts and
-intervention outcomes are unavailable in BDG2. A next experiment should test a model that
-combines leakage-safe lag features with weather and calendar inputs, using the same locked
-chronological boundary.
+intervention outcomes are unavailable in BDG2. A future experiment should be specified
+before opening a new test period—for example, rolling cross-validation within the current
+training period followed by evaluation on newly collected data. The present held-out
+period should not be reused for tuning.

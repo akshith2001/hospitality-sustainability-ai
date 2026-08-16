@@ -62,6 +62,7 @@ The repository includes:
 - a chronological test on the newest 30 days;
 - leave-one-venue-out evaluation reported for every venue;
 - a locked two-venue real-data evaluation with venue identity removed;
+- a stricter evaluation removing both venue identity and future-period observations;
 - anomaly precision and recall against injected labels; and
 - automated tests for modelling, data quality, governance and decision logic.
 
@@ -77,6 +78,13 @@ In a separate completely unseen-venue experiment, `Fox_food_Francesco` and
 same-type training mean for both venues: MAE improved by 54.8% for the food-service venue
 and 32.5% for the hotel. This tests cross-building transfer, not future-time forecasting,
 because the remaining training venues include observations from the same date range.
+
+The stricter combined evaluation holds out the same two venues and their newest 60
+eligible dates. Training uses only other venues and only earlier dates. The model improved
+MAE by 40.8% for `Fox_food_Francesco` and 50.3% for `Mouse_lodging_Vicente` against a
+same-type, earlier-period training mean. The predefined requirement of improvement for
+both venues was met. The hotel test period ends earlier because later near-zero readings
+are excluded under the already documented quality rule.
 
 Current synthetic and real-data numerical results are reported in the main
 [README](../README.md), with the full real-data method in
@@ -137,7 +145,7 @@ The present linear models may miss nonlinear relationships and interactions. Syn
 data cannot reproduce the diversity, behaviour, seasonality or sensor failures of real
 venues. The BDG2 evaluation is based on a small, third-party sample, lacks important
 hospitality operational features and does not test intervention outcomes. The two-venue
-transfer experiment is too small to establish broad generalisation and does not combine
-unseen-building evaluation with a future-time holdout. The model card should be updated
+transfer experiments are too small to establish broad generalisation, despite the combined
+unseen-building and future-time holdout. The model card should be updated
 whenever the data source, features, evaluation
 design, decision rules or deployment status changes.

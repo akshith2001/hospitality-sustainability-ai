@@ -1,7 +1,7 @@
 # Hospitality Sustainability AI
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/tests-92%20passing-2ea44f)](tests)
+[![Tests](https://img.shields.io/badge/tests-96%20passing-2ea44f)](tests)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Data: Real + Synthetic](https://img.shields.io/badge/data-real%20%2B%20synthetic-2ea44f)](#real-building-data)
 
@@ -80,6 +80,21 @@ met. This experiment tests transfer to new buildings, not prediction into a futu
 period: training venues include records from the same dates. See the
 [unseen-venue result note](docs/UNSEEN_VENUE_RESULTS.md).
 
+### Unseen venue and future-period evaluation
+
+The same two locked venues were then tested under a stricter design. Each model was
+trained only on other venues and only on dates before the held-out venue's newest 60
+eligible dates. This prevents both venue-identity leakage and future-period leakage.
+
+| Unseen venue and future period | Type-based baseline MAE | Model MAE | Improvement |
+|---|---:|---:|---:|
+| Fox_food_Francesco | 658.50 kWh/day | 389.82 kWh/day | 40.8% |
+| Mouse_lodging_Vicente | 1,019.06 kWh/day | 506.20 kWh/day | 50.3% |
+
+The model beat the predefined baseline for both venues separately. The hotel's newest 60
+eligible dates end on 2017-10-23 because later near-zero readings are excluded by the
+existing quality rule. See the [combined evaluation result note](docs/UNSEEN_FUTURE_RESULTS.md).
+
 ## What the project includes
 
 - Reproducible synthetic hospitality data with documented assumptions
@@ -119,6 +134,7 @@ python -m hospitality_ai.uncertainty --rows 1000 --seed 2026
 python -m hospitality_ai.evaluation_chart
 python -m hospitality_ai.generalisation_chart
 python -m hospitality_ai.unseen_venue_evaluation
+python -m hospitality_ai.unseen_future_evaluation
 ```
 
 Explain an alert and compare feasible interventions:

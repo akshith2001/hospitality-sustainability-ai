@@ -74,6 +74,16 @@ venue terms reached **159.92 kWh/day MAE**. This was a large improvement over th
 model, but it did not beat the fixed previous-day baseline at **159.83 kWh/day**. The
 near-tie is reported as a failed improvement, not rounded into a win.
 
+### Train-only rolling validation
+
+Four expanding 30-date folds ending before the reserved final test period compare every
+candidate without reopening the held-out answers. The lag-feature model achieved the
+lowest pooled validation MAE at **111.87 kWh/day**, followed by the previous-day baseline
+at **134.89 kWh/day**. It led for five of eight venues, so the result is promising but not
+uniform. Its later failure to beat previous day on the final period demonstrates temporal
+instability rather than invalidating either result. See the
+[full rolling-validation note](docs/ROLLING_VALIDATION_RESULTS.md).
+
 ### Completely unseen-venue evaluation
 
 Two venues were locked before evaluation using a reproducible selection rule: the venue
@@ -148,6 +158,7 @@ python -m hospitality_ai.evaluation_chart
 python -m hospitality_ai.generalisation_chart
 python -m hospitality_ai.unseen_venue_evaluation
 python -m hospitality_ai.unseen_future_evaluation
+python -m hospitality_ai.rolling_validation
 ```
 
 Explain an alert and compare feasible interventions:

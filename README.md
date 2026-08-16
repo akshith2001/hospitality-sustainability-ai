@@ -1,7 +1,7 @@
 # Hospitality Sustainability AI
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/tests-88%20passing-2ea44f)](tests)
+[![Tests](https://img.shields.io/badge/tests-92%20passing-2ea44f)](tests)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Data: Real + Synthetic](https://img.shields.io/badge/data-real%20%2B%20synthetic-2ea44f)](#real-building-data)
 
@@ -63,6 +63,23 @@ The real-data model improved on the baseline for four of five eligible test venu
 worsened for one. Three additional source venues had no eligible test-period readings and
 are explicitly reported as missing. See the [full result note](docs/REAL_DATA_RESULTS.md).
 
+### Completely unseen-venue evaluation
+
+Two venues were locked before evaluation using a reproducible selection rule: the venue
+with the most available records in each type, with alphabetical tie-breaking. Each venue
+was removed completely from its own training set. The model used venue type, floor area,
+temperature, weekday and annual seasonality, but no venue identity.
+
+| Unseen venue | Type-based baseline MAE | Model MAE | Improvement |
+|---|---:|---:|---:|
+| Fox_food_Francesco | 726.13 kWh/day | 327.85 kWh/day | 54.8% |
+| Mouse_lodging_Vicente | 1,001.15 kWh/day | 676.23 kWh/day | 32.5% |
+
+The predefined success criterion required improvement for both venues separately and was
+met. This experiment tests transfer to new buildings, not prediction into a future time
+period: training venues include records from the same dates. See the
+[unseen-venue result note](docs/UNSEEN_VENUE_RESULTS.md).
+
 ## What the project includes
 
 - Reproducible synthetic hospitality data with documented assumptions
@@ -78,6 +95,7 @@ are explicitly reported as missing. See the [full result note](docs/REAL_DATA_RE
 - Validated 30-minute smart-meter and daily operational-context formats
 - Daily coverage, reconciliation, joining and exclusion reporting
 - Venue-level data-quality reporting to expose selection bias
+- Completely unseen-venue testing without venue identity as a model feature
 
 ## Quick start
 
@@ -100,6 +118,7 @@ python -m hospitality_ai.anomaly --rows 1000 --seed 2026
 python -m hospitality_ai.uncertainty --rows 1000 --seed 2026
 python -m hospitality_ai.evaluation_chart
 python -m hospitality_ai.generalisation_chart
+python -m hospitality_ai.unseen_venue_evaluation
 ```
 
 Explain an alert and compare feasible interventions:

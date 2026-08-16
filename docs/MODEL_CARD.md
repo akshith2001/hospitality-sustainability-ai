@@ -61,6 +61,7 @@ The repository includes:
 - a reproducible random 80/20 split;
 - a chronological test on the newest 30 days;
 - leave-one-venue-out evaluation reported for every venue;
+- a locked two-venue real-data evaluation with venue identity removed;
 - anomaly precision and recall against injected labels; and
 - automated tests for modelling, data quality, governance and decision logic.
 
@@ -70,6 +71,12 @@ kWh/day MAE versus 651.73 kWh/day for a per-venue historical-mean baseline, a 19
 improvement across 266 eligible test rows. It improved for four of five eligible venues
 and worsened for one. Three additional source venues had no eligible test-period readings
 and are reported as missing. These results measure prediction accuracy only.
+
+In a separate completely unseen-venue experiment, `Fox_food_Francesco` and
+`Mouse_lodging_Vicente` were locked before their scores were calculated. The model beat a
+same-type training mean for both venues: MAE improved by 54.8% for the food-service venue
+and 32.5% for the hotel. This tests cross-building transfer, not future-time forecasting,
+because the remaining training venues include observations from the same date range.
 
 Current synthetic and real-data numerical results are reported in the main
 [README](../README.md), with the full real-data method in
@@ -129,6 +136,8 @@ Before a pilot or deployment, the project would require:
 The present linear models may miss nonlinear relationships and interactions. Synthetic
 data cannot reproduce the diversity, behaviour, seasonality or sensor failures of real
 venues. The BDG2 evaluation is based on a small, third-party sample, lacks important
-hospitality operational features and does not test intervention outcomes or fully unseen
-venues. The model card should be updated whenever the data source, features, evaluation
+hospitality operational features and does not test intervention outcomes. The two-venue
+transfer experiment is too small to establish broad generalisation and does not combine
+unseen-building evaluation with a future-time holdout. The model card should be updated
+whenever the data source, features, evaluation
 design, decision rules or deployment status changes.

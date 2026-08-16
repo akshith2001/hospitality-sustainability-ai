@@ -1,18 +1,19 @@
 # Hospitality Sustainability AI
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/tests-80%20passing-2ea44f)](tests)
+[![Tests](https://img.shields.io/badge/tests-82%20passing-2ea44f)](tests)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Data: Synthetic](https://img.shields.io/badge/data-synthetic-orange)](#synthetic-learning-data)
+[![Data: Real + Synthetic](https://img.shields.io/badge/data-real%20%2B%20synthetic-2ea44f)](#real-building-data)
 
 An educational research prototype for predicting hospitality electricity consumption,
 detecting unusual excess use and ranking practical sustainability interventions. The
 project emphasises explainability, honest evaluation, data quality, privacy and human
 oversight.
 
-> **Important:** all current performance results use transparent synthetic data. They
-> demonstrate the software and research method, not proven accuracy or savings in real
-> hospitality venues.
+> **Important:** the published model-performance results still use transparent synthetic
+> data. The repository now also includes a reproducible real-data preparation pipeline and
+> a derived daily subset from eight hospitality-related buildings. No real-data accuracy or
+> savings claim is made yet.
 
 ![Actual versus predicted electricity use](figures/actual_vs_predicted.svg)
 
@@ -108,6 +109,30 @@ occasional artificial excess use. A fixed seed makes experiments reproducible. B
 the generator defines the relationships, strong results are expected and cannot establish
 external validity.
 
+## Real building data
+
+The project now includes a reproducible importer for the open [Building Data Genome 2
+dataset](https://doi.org/10.5281/zenodo.3887306). From the official metadata it selects
+six buildings whose primary use is `Food sales and service` and two lodging buildings
+whose subindustry is explicitly `Hotel`. Hourly electricity readings are aggregated to
+daily totals only when at least 20 hourly values are present, and daily mean outdoor
+temperature is joined by site and date.
+
+The generated file, `data/processed/bdg2_hospitality_daily.csv`, contains 5,755 daily
+records covering 2016-01-01 to 2017-12-31. It includes venue ID, date, venue type, floor
+area, outdoor temperature, observed-hour count and electricity use. The large source files
+are excluded from Git; reproduce the subset after downloading and extracting BDG2 v1.0:
+
+```bash
+python -m hospitality_ai.bdg2_real_data PATH_TO_EXTRACTED_BDG2 \
+  --output data/processed/bdg2_hospitality_daily.csv
+```
+
+BDG2 does not provide restaurant customer counts, opening hours or kitchen-equipment
+counts. Therefore this subset supports real building-energy validation, not full validation
+of the operational hospitality model. Dataset provenance and licensing are recorded in
+[`docs/DATA_SOURCES.md`](docs/DATA_SOURCES.md).
+
 ## Evaluation design
 
 - **Baseline:** training-set mean predicted for every test record.
@@ -187,7 +212,9 @@ tests/                Automated unit tests
 
 ## Limitations
 
-- No real venue data have been collected or analysed.
+- No first-party venue data or verified intervention outcomes have been collected.
+- The BDG2 subset is real non-residential building data, but it was collected by third
+  parties and lacks several hospitality operational variables.
 - The linear model is intentionally interpretable and may not capture complex real patterns.
 - Synthetic observations do not reproduce every venue, behaviour, season or sensor failure.
 - Prediction ranges are empirical demonstrations, not formal calibrated intervals.

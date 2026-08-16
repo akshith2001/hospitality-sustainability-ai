@@ -4,6 +4,6 @@ __pycache__/
 .pytest_cache/
 *.egg-info/
 data/generated/
+data/external/
 outputs/
 .vscode/
-

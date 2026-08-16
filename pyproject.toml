@@ -31,6 +31,7 @@ plot-model-evaluation = "hospitality_ai.evaluation_chart:main"
 plot-generalisation-error = "hospitality_ai.generalisation_chart:main"
 evaluate-newest-month = "hospitality_ai.temporal_validation:main"
 evaluate-unseen-venue = "hospitality_ai.venue_validation:main"
+prepare-bdg2-hospitality-data = "hospitality_ai.bdg2_real_data:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -1,7 +1,7 @@
 # Hospitality Sustainability AI
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/tests-82%20passing-2ea44f)](tests)
+[![Tests](https://img.shields.io/badge/tests-86%20passing-2ea44f)](tests)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Data: Real + Synthetic](https://img.shields.io/badge/data-real%20%2B%20synthetic-2ea44f)](#real-building-data)
 
@@ -132,6 +132,18 @@ BDG2 does not provide restaurant customer counts, opening hours or kitchen-equip
 counts. Therefore this subset supports real building-energy validation, not full validation
 of the operational hospitality model. Dataset provenance and licensing are recorded in
 [`docs/DATA_SOURCES.md`](docs/DATA_SOURCES.md).
+
+### First real-data evaluation
+
+A chronological experiment trained on all eligible records through 2017-11-01 and tested
+on the newest 60 days. The seasonal linear model achieved **651.68 kWh/day MAE**, compared
+with **683.62 kWh/day** for a per-venue historical-mean baseline: a modest **4.7% overall
+improvement**. Performance improved for four venues and worsened for four, so the project
+reports every venue and does not claim uniform benefit.
+
+![Real-data MAE for every held-out venue](figures/bdg2_real_data_mae.svg)
+
+Full method, results and interpretation: [real-data evaluation](docs/REAL_DATA_RESULTS.md).
 
 ## Evaluation design
 

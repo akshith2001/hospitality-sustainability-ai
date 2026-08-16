@@ -31,14 +31,22 @@ It is not intended to:
 
 ## Data
 
-All current training and evaluation data are synthetic and generated with a fixed random
-seed. Features represent venue type, customer count, opening hours, outside-temperature
-distance from 18 C, floor area, kitchen-equipment count and day of week. The outcome is
-daily `electricity_kwh`.
+The repository contains two distinct evidence streams. Synthetic experiments generated
+with a fixed random seed use venue type, customer count, opening hours,
+outside-temperature distance from 18 C, floor area, kitchen-equipment count and day of
+week to predict daily `electricity_kwh`.
 
 Artificial excess-use cases are injected for anomaly evaluation. Their labels are never
 used as prediction inputs. Because the generator defines the relationships, strong model
 performance is expected and does not demonstrate external validity.
+
+The first real-building evaluation uses 5,755 derived daily observations from six
+food-service buildings and two hotels selected from Building Data Genome 2. It includes
+venue identity, floor area, outdoor temperature, calendar and seasonal terms, but it does
+not include customer counts, opening hours, kitchen-equipment counts or intervention
+outcomes. Daily totals below 1 kWh are excluded as zero/near-zero meter states for
+buildings larger than 1,500 square metres. This post-diagnostic quality rule is disclosed
+in the real-data result note.
 
 The proposed real-data study uses pseudonymous venue identifiers, calibrated 30-minute
 smart-meter readings and daily operational context. Its collection, verification,
@@ -56,8 +64,16 @@ The repository includes:
 - anomaly precision and recall against injected labels; and
 - automated tests for modelling, data quality, governance and decision logic.
 
-Current numerical results are reported in the main [README](../README.md). They apply only
-to the included synthetic experiments.
+For the real-building evaluation, the model was trained on eligible observations through
+2017-11-01 and tested on the newest 60 dates. The seasonal linear model achieved 523.42
+kWh/day MAE versus 651.73 kWh/day for a per-venue historical-mean baseline, a 19.7%
+improvement across 266 eligible test rows. It improved for four of five eligible venues
+and worsened for one. Three additional source venues had no eligible test-period readings
+and are reported as missing. These results measure prediction accuracy only.
+
+Current synthetic and real-data numerical results are reported in the main
+[README](../README.md), with the full real-data method in
+[REAL_DATA_RESULTS.md](REAL_DATA_RESULTS.md).
 
 ## Explainability and uncertainty
 
@@ -110,7 +126,9 @@ Before a pilot or deployment, the project would require:
 
 ## Limitations and maintenance
 
-The present linear model may miss nonlinear relationships and interactions. Synthetic
+The present linear models may miss nonlinear relationships and interactions. Synthetic
 data cannot reproduce the diversity, behaviour, seasonality or sensor failures of real
+venues. The BDG2 evaluation is based on a small, third-party sample, lacks important
+hospitality operational features and does not test intervention outcomes or fully unseen
 venues. The model card should be updated whenever the data source, features, evaluation
 design, decision rules or deployment status changes.

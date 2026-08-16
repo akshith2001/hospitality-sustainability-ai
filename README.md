@@ -10,10 +10,9 @@ detecting unusual excess use and ranking practical sustainability interventions.
 project emphasises explainability, honest evaluation, data quality, privacy and human
 oversight.
 
-> **Important:** the published model-performance results still use transparent synthetic
-> data. The repository now also includes a reproducible real-data preparation pipeline and
-> a derived daily subset from eight hospitality-related buildings. No real-data accuracy or
-> savings claim is made yet.
+> **Important:** the repository reports both synthetic experiments and a first real-building
+> evaluation. The real-data result measures predictive accuracy only; it is not evidence of
+> causal energy savings, verified waste or successful intervention outcomes.
 
 ![Actual versus predicted electricity use](figures/actual_vs_predicted.svg)
 
@@ -24,9 +23,11 @@ oversight.
 1. Read the [research question](#research-question) and the synthetic-data warning above.
 2. Review the [current results](#current-results) and evaluation figure.
 3. Inspect the [model card](docs/MODEL_CARD.md) for intended use, risks and safeguards.
-4. Read the [real-world study protocol](docs/REAL_WORLD_STUDY_PROTOCOL.md) to see how the
+4. Read the [research report](docs/Hospitality_Sustainability_AI_Research_Report.pdf) for a
+   concise account of the real-data method, results, limitations and next experiments.
+5. Read the [real-world study protocol](docs/REAL_WORLD_STUDY_PROTOCOL.md) to see how the
    prototype could be evaluated with genuine venue data.
-5. Run the test suite and experiments using the [quick-start commands](#quick-start).
+6. Run the test suite and experiments using the [quick-start commands](#quick-start).
 
 The central contribution is not a claim that synthetic results will transfer directly to
 real venues. It is a transparent, testable research pipeline connecting prediction,
@@ -40,6 +41,8 @@ and operationally practical intervention for an individual venue?
 
 ## Current results
 
+### Synthetic learning experiments
+
 | Evaluation | Baseline MAE | Model MAE | Improvement |
 |---|---:|---:|---:|
 | Reproducible random 80/20 split | 77.27 kWh | 21.73 kWh | 71.9% |
@@ -49,6 +52,16 @@ and operationally practical intervention for an individual venue?
 The held-out venue analysis reports all 20 venues rather than selecting the best result.
 Current anomaly evaluation achieved 81.8% precision and 100% recall on deliberately
 injected synthetic excess-use cases. These figures are not real-world claims.
+
+### Real-building evaluation
+
+| Evaluation | Test rows | Baseline MAE | Model MAE | Improvement |
+|---|---:|---:|---:|---:|
+| Newest 60 dates from eligible BDG2 venues | 266 | 651.73 kWh/day | 523.42 kWh/day | 19.7% |
+
+The real-data model improved on the baseline for four of five eligible test venues and
+worsened for one. Three additional source venues had no eligible test-period readings and
+are explicitly reported as missing. See the [full result note](docs/REAL_DATA_RESULTS.md).
 
 ## What the project includes
 

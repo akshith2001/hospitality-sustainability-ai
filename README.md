@@ -1,7 +1,7 @@
 # Hospitality Sustainability AI
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/tests-96%20passing-2ea44f)](tests)
+[![Tests](https://img.shields.io/badge/tests-97%20passing-2ea44f)](tests)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Data: Real + Synthetic](https://img.shields.io/badge/data-real%20%2B%20synthetic-2ea44f)](#real-building-data)
 
@@ -94,6 +94,8 @@ eligible dates. This prevents both venue-identity leakage and future-period leak
 The model beat the predefined baseline for both venues separately. The hotel's newest 60
 eligible dates end on 2017-10-23 because later near-zero readings are excluded by the
 existing quality rule. See the [combined evaluation result note](docs/UNSEEN_FUTURE_RESULTS.md).
+
+![Unseen venues tested on future periods](figures/unseen_future_mae.svg)
 
 ## What the project includes
 

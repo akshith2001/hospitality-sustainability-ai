@@ -34,6 +34,7 @@ evaluate-unseen-venue = "hospitality_ai.venue_validation:main"
 prepare-bdg2-hospitality-data = "hospitality_ai.bdg2_real_data:main"
 evaluate-bdg2-real-data = "hospitality_ai.real_data_evaluation:main"
 plot-bdg2-real-data = "hospitality_ai.real_data_chart:main"
+diagnose-bdg2-venues = "hospitality_ai.real_data_diagnostics:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

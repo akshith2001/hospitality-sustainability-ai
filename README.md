@@ -1,7 +1,7 @@
 # Hospitality Sustainability AI
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/tests-86%20passing-2ea44f)](tests)
+[![Tests](https://img.shields.io/badge/tests-88%20passing-2ea44f)](tests)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Data: Real + Synthetic](https://img.shields.io/badge/data-real%20%2B%20synthetic-2ea44f)](#real-building-data)
 
@@ -135,11 +135,13 @@ of the operational hospitality model. Dataset provenance and licensing are recor
 
 ### First real-data evaluation
 
-A chronological experiment trained on all eligible records through 2017-11-01 and tested
-on the newest 60 days. The seasonal linear model achieved **651.68 kWh/day MAE**, compared
-with **683.62 kWh/day** for a per-venue historical-mean baseline: a modest **4.7% overall
-improvement**. Performance improved for four venues and worsened for four, so the project
-reports every venue and does not claim uniform benefit.
+A chronological experiment trained on eligible records through 2017-11-01 and tested on
+the newest 60 dates. After applying a fixed pre-split rule that excludes zero/near-zero
+meter states, the seasonal linear model achieved **523.42 kWh/day MAE**, compared with
+**651.73 kWh/day** for a per-venue historical-mean baseline: a **19.7% overall
+improvement**. Performance improved for four of five eligible test venues and worsened for
+one. Three other source venues had no eligible test-period readings and are reported as
+missing rather than scored.
 
 ![Real-data MAE for every held-out venue](figures/bdg2_real_data_mae.svg)
 

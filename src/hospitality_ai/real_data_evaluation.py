@@ -39,6 +39,7 @@ class RealDataEvaluation:
     model_mae_kwh: float
     improvement_pct: float
     venue_results: tuple[VenueEvaluation, ...]
+    missing_test_venues: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -53,11 +54,22 @@ class RealLinearModel:
         )
 
 
-def load_real_daily_records(path: Path) -> list[RealDailyRecord]:
+def load_real_daily_records(
+    path: Path, minimum_daily_kwh: float = 1.0
+) -> list[RealDailyRecord]:
+    """Load eligible days, excluding zero or near-zero meter states.
+
+    The selected buildings are all larger than 1,500 square metres. Daily totals below
+    1 kWh are treated as meter dropout, stuck readings or closure rather than normal
+    operating observations. This rule is fixed before chronological splitting.
+    """
     records = []
     with path.open(encoding="utf-8-sig", newline="") as stream:
         for row in csv.DictReader(stream):
             if not row["outside_temperature_c"]:
+                continue
+            electricity_kwh = float(row["electricity_kwh"])
+            if electricity_kwh < minimum_daily_kwh:
                 continue
             records.append(
                 RealDailyRecord(
@@ -65,7 +77,7 @@ def load_real_daily_records(path: Path) -> list[RealDailyRecord]:
                     utc_date=row["utc_date"],
                     venue_type=row["venue_type"],
                     outside_temperature_c=float(row["outside_temperature_c"]),
-                    electricity_kwh=float(row["electricity_kwh"]),
+                    electricity_kwh=electricity_kwh,
                 )
             )
     return records
@@ -181,6 +193,12 @@ def evaluate_real_data(
         model_mae_kwh=model_mae,
         improvement_pct=improvement,
         venue_results=tuple(venue_results),
+        missing_test_venues=tuple(
+            sorted(
+                {record.venue_id for record in training}
+                - {record.venue_id for record in test}
+            )
+        ),
     )
 
 
@@ -207,6 +225,10 @@ def main() -> None:
             f"  {venue.venue_id}: n={venue.test_rows}, "
             f"baseline={venue.baseline_mae_kwh:,.2f}, model={venue.model_mae_kwh:,.2f}"
         )
+    if result.missing_test_venues:
+        print("No eligible test-period readings:")
+        for venue_id in result.missing_test_venues:
+            print(f"  {venue_id}")
 
 
 if __name__ == "__main__":

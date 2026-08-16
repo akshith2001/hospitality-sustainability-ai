@@ -28,14 +28,14 @@ def write_real_data_chart(data_path: Path, output_path: Path, test_days: int = 6
     elements = [
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" '
         f'viewBox="0 0 {width} {height}" role="img" aria-labelledby="title desc">',
-        '<title id="title">Real-data MAE for every held-out hospitality-related building</title>',
+        '<title id="title">Real-data MAE for every eligible held-out hospitality-related building</title>',
         '<desc id="desc">Grouped bars compare a per-venue historical-mean baseline with '
         'a seasonal linear model on the newest 60 days of real BDG2 electricity data.</desc>',
         '<rect width="100%" height="100%" fill="#ffffff"/>',
         '<text x="590" y="32" text-anchor="middle" font-family="Arial" font-size="22" '
         'font-weight="bold" fill="#172033">Real BDG2 chronological evaluation</text>',
         f'<text x="590" y="57" text-anchor="middle" font-family="Arial" font-size="13" '
-        f'fill="#536078">Newest {test_days} days; lower MAE is better; all eight venues shown</text>',
+        f'fill="#536078">Newest {test_days} days; lower MAE is better; all eligible venues shown</text>',
         f'<rect x="{left}" y="{top}" width="{plot_width}" height="{plot_height}" '
         'fill="#f8fafc" stroke="#aab4c3"/>',
     ]
@@ -81,7 +81,7 @@ def write_real_data_chart(data_path: Path, output_path: Path, test_days: int = 6
             f'transform="rotate(-90 24 {top + plot_height / 2})" font-family="Arial" '
             'font-size="14" fill="#172033">MAE (kWh/day)</text>',
             '<text x="590" y="625" text-anchor="middle" font-family="Arial" font-size="11" '
-            'fill="#536078">Source: Building Data Genome 2 v1.0. Improvement is uneven across venues.</text>',
+            'fill="#536078">Source: BDG2 v1.0. Three venues lacked eligible test-period readings.</text>',
             '</svg>',
         ]
     )
